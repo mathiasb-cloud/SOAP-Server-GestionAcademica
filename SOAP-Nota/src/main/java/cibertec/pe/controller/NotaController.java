@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import cibertec.pe.dto.ResultadoDTO;
 import cibertec.pe.model.Nota;
 import cibertec.pe.service.INotaService;
 
@@ -68,5 +70,10 @@ public class NotaController {
 	@GetMapping("/porCurso/{codCurso}")
 	public List<Nota> listarNotasPorCurso(@PathVariable int codCurso) {
 		return notaService.listarNotasPorCurso(codCurso);
+	}
+	
+	@GetMapping("/resultado/{codMatricula}")
+	public ResultadoDTO obtenerResultado(@PathVariable int codMatricula) {
+	    return notaService.calcularResultado(codMatricula);
 	}
 }

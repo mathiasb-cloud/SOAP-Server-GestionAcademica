@@ -1,6 +1,8 @@
 package cibertec.pe.service;
 import java.util.List;
 import java.util.Optional;
+
+import cibertec.pe.dto.ResultadoDTO;
 import cibertec.pe.model.Nota;
 import jakarta.jws.WebService;
 
@@ -15,4 +17,6 @@ public interface INotaService {
 	public List<Nota> listarNotasPorMatricula(int codMatricula);
 	public List<Nota> listarNotasPorAlumno(int codAlumno);
 	public List<Nota> listarNotasPorCurso(int codCurso);
+	
+	ResultadoDTO calcularResultado(int codMatricula);
 }

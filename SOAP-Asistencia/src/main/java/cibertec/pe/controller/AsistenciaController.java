@@ -74,7 +74,7 @@ public class AsistenciaController {
 	
 	@GetMapping("/porFecha/{fecha}")
 	public List<Asistencia> listarAsistenciasPorFecha(
-			@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
+			@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) String fecha) {
 		return asistenciaService.listarAsistenciasPorFecha(fecha);
 	}
 	

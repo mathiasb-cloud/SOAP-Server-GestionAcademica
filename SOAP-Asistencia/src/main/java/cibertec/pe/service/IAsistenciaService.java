@@ -16,6 +16,8 @@ public interface IAsistenciaService {
 	public List<Asistencia> listarAsistenciasPorMatricula(int codMatricula);
 	public List<Asistencia> listarAsistenciasPorAlumno(int codAlumno);
 	public List<Asistencia> listarAsistenciasPorCurso(int codCurso);
-	public List<Asistencia> listarAsistenciasPorFecha(LocalDate fecha);
+	public List<Asistencia> listarAsistenciasPorFecha(String fecha);
 	public double calcularPorcentajeAsistencia(int codMatricula);
+	
+	
 }

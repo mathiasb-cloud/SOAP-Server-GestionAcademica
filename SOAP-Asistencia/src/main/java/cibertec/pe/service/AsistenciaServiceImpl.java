@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import cibertec.pe.entity.Matricula;
 import cibertec.pe.feignclient.MatriculaFeignClient;
 import cibertec.pe.model.Asistencia;
+import cibertec.pe.model.EstadoAsistencia;
 import cibertec.pe.repository.IAsistenciaRepository;
 import feign.FeignException;
 import jakarta.jws.WebService;
@@ -32,19 +33,47 @@ public class AsistenciaServiceImpl implements IAsistenciaService {
 	
 	@Override
 	public Asistencia registrarAsistencia(Asistencia asistencia) {
-		
-		try {
-			ResponseEntity<Matricula> response = matriculaClient.obtenerMatricula(asistencia.getCodMatricula());
-			if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-				return asistenciaRepository.save(asistencia);
-			} else {
-				throw new RuntimeException("Error: La matrícula con código " + asistencia.getCodMatricula() + " no existe");
-			}
-		} catch (FeignException.NotFound e) {
-			throw new RuntimeException("Error: La matrícula con código " + asistencia.getCodMatricula() + " no existe");
-		} catch (Exception e) {
-			throw new RuntimeException("Error al validar la matrícula: " + e.getMessage());
-		}
+
+	    if (asistencia.getEstado() == null) {
+	        throw new RuntimeException("El estado no puede ser null");
+	    }
+
+	    String estadoInput = asistencia.getEstado().toString().toUpperCase();
+
+	    switch (estadoInput) {
+	        case "PRESENTE":
+	            asistencia.setEstado(EstadoAsistencia.PRESENTE);
+	            break;
+	        case "FALTA":
+	            asistencia.setEstado(EstadoAsistencia.FALTA);
+	            break;
+	        case "TARDE":
+	        case "TARDANZA":
+	            asistencia.setEstado(EstadoAsistencia.TARDANZA);
+	            break;
+	        default:
+	            throw new RuntimeException("Estado inválido");
+	    }
+
+	    
+	    if (asistenciaRepository.existsByCodMatriculaAndFecha(
+	            asistencia.getCodMatricula(), asistencia.getFecha())) {
+	        throw new RuntimeException("Ya existe asistencia para esa fecha");
+	    }
+
+	    try {
+	        ResponseEntity<Matricula> response =
+	                matriculaClient.obtenerMatricula(asistencia.getCodMatricula());
+
+	        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+	            return asistenciaRepository.save(asistencia);
+	        } else {
+	            throw new RuntimeException("La matrícula no existe");
+	        }
+
+	    } catch (Exception e) {
+	        throw new RuntimeException("Error: " + e.getMessage());
+	    }
 	}
 	
 	@Override
@@ -121,7 +150,7 @@ public class AsistenciaServiceImpl implements IAsistenciaService {
 	}
 	
 	@Override
-	public List<Asistencia> listarAsistenciasPorFecha(LocalDate fecha) {
+	public List<Asistencia> listarAsistenciasPorFecha(String fecha) {
 		return asistenciaRepository.findByFecha(fecha);
 	}
 	
@@ -134,7 +163,8 @@ public class AsistenciaServiceImpl implements IAsistenciaService {
 		}
 		
 		long asistenciasPresentes = asistencias.stream()
-				.filter(a -> "Presente".equalsIgnoreCase(a.getEstado()) || "Tardanza".equalsIgnoreCase(a.getEstado()))
+				.filter(a -> a.getEstado() == EstadoAsistencia.PRESENTE 
+				|| a.getEstado() == EstadoAsistencia.TARDANZA)
 				.count();
 		
 		return (asistenciasPresentes * 100.0) / asistencias.size();

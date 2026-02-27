@@ -4,6 +4,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import cibertec.pe.model.EstadoAsistencia;
 
 @Entity
 @Table(name = "tbl_asistencia")
@@ -14,13 +17,14 @@ public class Asistencia {
 	private int codAsistencia;
 	private Integer codMatricula;
 	private String fecha;
-	private String estado;
+	@Enumerated(EnumType.STRING)
+	private EstadoAsistencia estado;
 	private String observaciones;
 	
 	public Asistencia() {
 	}
 	
-	public Asistencia(Integer codMatricula, String fecha, String estado, String observaciones) {
+	public Asistencia(Integer codMatricula, String fecha, EstadoAsistencia estado, String observaciones) {
 		this.codMatricula = codMatricula;
 		this.fecha = fecha;
 		this.estado = estado;
@@ -51,14 +55,13 @@ public class Asistencia {
 		this.fecha = fecha;
 	}
 	
-	public String getEstado() {
-		return estado;
+	public EstadoAsistencia getEstado() {
+	    return estado;
 	}
-	
-	public void setEstado(String estado) {
-		this.estado = estado;
+
+	public void setEstado(EstadoAsistencia estado) {
+	    this.estado = estado;
 	}
-	
 	public String getObservaciones() {
 		return observaciones;
 	}

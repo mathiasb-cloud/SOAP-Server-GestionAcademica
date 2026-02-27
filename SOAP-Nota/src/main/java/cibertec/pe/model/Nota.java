@@ -16,13 +16,13 @@ public class Nota {
 	private Integer codMatricula; 
 	private String tipoEvaluacion;
 	private Double nota;
-	private LocalDate fechaEvaluacion;
+	private String fechaEvaluacion;
 	private String observaciones;
 	
 	public Nota() {
 	}
 	
-	public Nota(Integer codMatricula, String tipoEvaluacion, Double nota, LocalDate fechaEvaluacion, String observaciones) {
+	public Nota(Integer codMatricula, String tipoEvaluacion, Double nota, String fechaEvaluacion, String observaciones) {
 		this.codMatricula = codMatricula;
 		this.tipoEvaluacion = tipoEvaluacion;
 		this.nota = nota;
@@ -62,11 +62,11 @@ public class Nota {
 		this.nota = nota;
 	}
 	
-	public LocalDate getFechaEvaluacion() {
+	public String getFechaEvaluacion() {
 		return fechaEvaluacion;
 	}
 	
-	public void setFechaEvaluacion(LocalDate fechaEvaluacion) {
+	public void setFechaEvaluacion(String fechaEvaluacion) {
 		this.fechaEvaluacion = fechaEvaluacion;
 	}
 	

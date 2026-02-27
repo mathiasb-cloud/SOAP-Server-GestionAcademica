@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
+import cibertec.pe.dto.ResultadoDTO;
 import cibertec.pe.entity.Matricula;
+import cibertec.pe.feignclient.AsistenciaFeignClient;
 import cibertec.pe.feignclient.MatriculaFeignClient;
 import cibertec.pe.model.Nota;
 import cibertec.pe.repository.INotaRepository;
@@ -22,6 +25,9 @@ public class NotaServiceImpl implements INotaService {
 	
 	@Autowired
 	private MatriculaFeignClient matriculaClient;
+	
+	@Autowired
+	private AsistenciaFeignClient asistenciaClient;
 	
 	@Override
 	public List<Nota> listarNotas() {
@@ -120,5 +126,51 @@ public class NotaServiceImpl implements INotaService {
 		}
 		
 		return notasDelCurso;
+	}
+	
+	
+	@Override
+	public ResultadoDTO calcularResultado(int codMatricula) {
+
+	    List<Nota> notas = notaRepository.findByCodMatricula(codMatricula);
+
+	    double t1 = 0, t2 = 0, ef = 0;
+
+	    for (Nota n : notas) {
+	        switch (n.getTipoEvaluacion()) {
+	            case "T1": t1 = n.getNota(); break;
+	            case "T2": t2 = n.getNota(); break;
+	            case "EF": ef = n.getNota(); break;
+	        }
+	    }
+
+	    double promedio = (t1 * 0.3) + (t2 * 0.3) + (ef * 0.4);
+
+	    
+	    double asistencia = 0;
+	    try {
+	        String response = asistenciaClient.obtenerPorcentaje(codMatricula);
+	        asistencia = Double.parseDouble(response.replaceAll("[^0-9.]", ""));
+	    } catch (Exception e) {
+	        asistencia = 0;
+	    }
+
+	    String estado;
+	    if (ef < 10) {
+	        estado = "DESAPROBADO (EF bajo)";
+	    } else if (asistencia < 70) {
+	        estado = "DESAPROBADO (inasistencias)";
+	    } else if (promedio >= 13) {
+	        estado = "APROBADO";
+	    } else {
+	        estado = "DESAPROBADO";
+	    }
+
+	    ResultadoDTO r = new ResultadoDTO();
+	    r.setPromedio(promedio);
+	    r.setEstado(estado);
+	    r.setAsistencia(asistencia);
+
+	    return r;
 	}
 }

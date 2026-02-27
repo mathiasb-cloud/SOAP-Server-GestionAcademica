@@ -1,2 +1,3 @@
-2026/02/24-12:52:19.685 5748 Creating DB C:\Users\WIN-10\Documents\SOAP-Server-Academico\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb since it was missing.
-2026/02/24-12:52:19.820 5748 Reusing MANIFEST C:\Users\WIN-10\Documents\SOAP-Server-Academico\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
+2026/02/26-21:04:19.258 40c Reusing MANIFEST C:\Users\WIN-10\Documents\SOAP-Server-Academico\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
+2026/02/26-21:04:19.282 40c Recovering log #3
+2026/02/26-21:04:19.286 40c Reusing old log C:\Users\WIN-10\Documents\SOAP-Server-Academico\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/000003.log 
