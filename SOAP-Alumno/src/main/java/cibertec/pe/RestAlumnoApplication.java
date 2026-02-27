@@ -20,7 +20,7 @@ ConfigurableApplicationContext context = SpringApplication.run(RestAlumnoApplica
 		
 		AlumnoImplement service = context.getBean(AlumnoImplement.class);
 		
-		Endpoint.publish("http://localhost:8085/ws/service1", service);
+		Endpoint.publish("http://localhost:8085/ws/alumno", service);
 	}
 }
 

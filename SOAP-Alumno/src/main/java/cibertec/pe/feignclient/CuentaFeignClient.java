@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import cibertec.pe.entity.Cuenta;
 
-@FeignClient(name = "REST-CUENTA", url = "http://localhost:9005")
+@FeignClient(name = "SOAP-Cuenta", url = "http://localhost:9007")
 public interface CuentaFeignClient {
 	
 	@PostMapping("/api/cuenta/createCuenta")
