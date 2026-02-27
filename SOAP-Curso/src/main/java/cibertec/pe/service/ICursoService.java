@@ -1,0 +1,17 @@
+package cibertec.pe.service;
+import java.util.List;
+import java.util.Optional;
+import cibertec.pe.model.Curso;
+import jakarta.jws.WebService;
+
+@WebService
+public interface ICursoService {
+	
+	public List<Curso> listarCursos();
+	public Curso crearCurso(Curso curso);
+	public Optional<Curso> buscarCurso(int codigo);
+	public String editarCurso(int nroCurso, Curso curso);
+	public void eliminarCurso(int codigo);
+	public List<Curso> listarCursoByCodDocente(int codDocente);
+	public String asignarDocente(int nroCurso, int codDocente);
+}

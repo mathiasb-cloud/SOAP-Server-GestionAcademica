@@ -1,0 +1,61 @@
+package cibertec.pe.model;
+
+import java.time.LocalDate;
+
+import jakarta.persistence.*;
+
+
+@Entity
+@Table(name = "tbl_matricula")
+public class Matricula {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int codMatricula;
+    private int codAlumno;
+    private int codCurso;
+    private String fechaMatricula;
+    private String estado;
+	public Matricula(int codAlumno, int codCurso, String fechaMatricula, String estado) {
+		super();
+		this.codAlumno = codAlumno;
+		this.codCurso = codCurso;
+		this.fechaMatricula = fechaMatricula;
+		this.estado = estado;
+	}
+	public Matricula() {
+		super();
+	}
+	public int getCodMatricula() {
+		return codMatricula;
+	}
+	public void setCodMatricula(int codMatricula) {
+		this.codMatricula = codMatricula;
+	}
+	public int getCodAlumno() {
+		return codAlumno;
+	}
+	public void setCodAlumno(int codAlumno) {
+		this.codAlumno = codAlumno;
+	}
+	public int getCodCurso() {
+		return codCurso;
+	}
+	public void setCodCurso(int codCurso) {
+		this.codCurso = codCurso;
+	}
+	public String getFechaMatricula() {
+		return fechaMatricula;
+	}
+	public void setFechaMatricula(String fechaMatricula) {
+		this.fechaMatricula = fechaMatricula;
+	}
+	public String getEstado() {
+		return estado;
+	}
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+    
+    
+}

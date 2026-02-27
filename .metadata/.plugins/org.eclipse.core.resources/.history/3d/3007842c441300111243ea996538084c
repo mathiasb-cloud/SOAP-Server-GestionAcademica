@@ -1,0 +1,3 @@
+spring.application.name=EUREKA-SoapServer
+
+server.port=8761
