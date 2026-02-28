@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CIBERTEC — Sistema Académico</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@300;400;500;600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f0e8;
+  --surface: #faf7f2;
+  --surface2: #ede8df;
+  --border: #d4ccc0;
+  --accent: #c8392b;
+  --accent2: #2c5f8a;
+  --accent3: #2d7a3a;
+  --text: #1a1410;
+  --text-dim: #6b5e52;
+  --text-dimmer: #b0a090;
+  --success: #2d7a3a;
+  --error: #c8392b;
+  --warning: #b8860b;
+  --ink: #1a1410;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'JetBrains Mono', monospace; min-height: 100vh; }
+
+/* Grain texture */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: 0.6;
+}
+
+.app { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background: var(--ink);
+  display: flex; flex-direction: column;
+  position: fixed; top: 0; left: 0; bottom: 0;
+  z-index: 100;
+}
+.sidebar-header {
+  padding: 32px 24px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  color: #f5f0e8;
+  letter-spacing: 3px;
+  line-height: 1;
+}
+.logo span { color: var(--accent); }
+.logo-sub {
+  font-size: 8px;
+  color: rgba(245,240,232,0.4);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+.nav { flex: 1; padding: 20px 12px; overflow-y: auto; }
+.nav-section-label {
+  font-size: 8px; letter-spacing: 3px; text-transform: uppercase;
+  color: rgba(245,240,232,0.25); padding: 16px 12px 6px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 4px; cursor: pointer;
+  color: rgba(245,240,232,0.5); font-size: 11px;
+  transition: all 0.15s; margin-bottom: 1px;
+  letter-spacing: 0.5px;
+}
+.nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(245,240,232,0.85); }
+.nav-item.active { background: var(--accent); color: #f5f0e8; }
+.nav-icon { font-size: 13px; width: 20px; text-align: center; flex-shrink: 0; }
+.nav-bottom { padding: 12px; border-top: 1px solid rgba(255,255,255,0.06); }
+
+/* Main */
+.main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; }
+.topbar {
+  height: 56px; background: var(--surface);
+  border-bottom: 2px solid var(--ink);
+  display: flex; align-items: center; padding: 0 32px; gap: 16px;
+  position: sticky; top: 0; z-index: 50;
+}
+.topbar-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px; letter-spacing: 2px; flex: 1;
+  color: var(--ink);
+}
+.topbar-key {
+  font-size: 10px; color: var(--text-dim);
+  background: var(--surface2); border: 1px solid var(--border);
+  padding: 4px 10px; border-radius: 3px;
+  letter-spacing: 1px;
+}
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); }
+.content { padding: 28px 32px; flex: 1; }
+
+/* Section */
+.section-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; gap: 16px; }
+.section-title { font-family: 'Playfair Display', serif; font-size: 32px; line-height: 1; }
+.section-title em { color: var(--accent); font-style: italic; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 16px; border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  cursor: pointer; transition: all 0.15s; border: none; font-weight: 500;
+  letter-spacing: 0.5px; text-transform: uppercase;
+}
+.btn-primary { background: var(--ink); color: #f5f0e8; }
+.btn-primary:hover { background: var(--accent); }
+.btn-ghost { background: transparent; color: var(--text-dim); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--surface2); color: var(--text); }
+.btn-danger { background: transparent; color: var(--error); border: 1px solid rgba(200,57,43,0.3); }
+.btn-danger:hover { background: rgba(200,57,43,0.08); }
+.btn-blue { background: var(--accent2); color: white; }
+.btn-blue:hover { background: #245177; }
+.btn-sm { padding: 5px 10px; font-size: 10px; }
+
+/* Stats */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 12px; margin-bottom: 24px; }
+.stat-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-top: 3px solid var(--ink); padding: 16px; border-radius: 2px;
+}
+.stat-label { font-size: 8px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px; }
+.stat-value { font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: var(--ink); line-height: 1; }
+
+/* Table */
+.table-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 2px; overflow: hidden; margin-bottom: 20px;
+}
+.table-toolbar {
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  background: var(--surface2);
+}
+.search-input {
+  flex: 1; min-width: 160px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 2px; padding: 7px 12px; color: var(--text);
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; outline: none;
+}
+.search-input:focus { border-color: var(--ink); }
+.search-input::placeholder { color: var(--text-dimmer); }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 11px; }
+thead tr { background: var(--ink); }
+th {
+  padding: 10px 14px; text-align: left; font-weight: 500;
+  color: rgba(245,240,232,0.7); font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; white-space: nowrap;
+}
+td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--text); }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: var(--surface2); }
+.td-actions { display: flex; gap: 5px; }
+.id-cell { color: var(--text-dimmer); font-size: 10px; }
+
+/* Badge */
+.badge {
+  display: inline-flex; align-items: center; padding: 2px 7px;
+  border-radius: 2px; font-size: 9px; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase;
+}
+.badge-green { background: rgba(45,122,58,0.12); color: var(--success); border: 1px solid rgba(45,122,58,0.2); }
+.badge-red { background: rgba(200,57,43,0.1); color: var(--error); border: 1px solid rgba(200,57,43,0.2); }
+.badge-blue { background: rgba(44,95,138,0.1); color: var(--accent2); border: 1px solid rgba(44,95,138,0.2); }
+.badge-yellow { background: rgba(184,134,11,0.1); color: var(--warning); border: 1px solid rgba(184,134,11,0.2); }
+.badge-gray { background: var(--surface2); color: var(--text-dim); border: 1px solid var(--border); }
+
+/* Modal */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(26,20,16,0.6); backdrop-filter: blur(2px);
+  z-index: 200; align-items: center; justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface); border: 1px solid var(--border);
+  border-top: 3px solid var(--ink);
+  border-radius: 2px; width: 520px; max-width: 95vw; max-height: 88vh;
+  overflow-y: auto; animation: modalIn 0.2s ease;
+}
+@keyframes modalIn { from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)} }
+.modal-header {
+  padding: 20px 24px 16px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--surface2);
+}
+.modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; }
+.modal-close {
+  width: 28px; height: 28px; border-radius: 2px;
+  background: transparent; border: 1px solid var(--border);
+  color: var(--text-dim); cursor: pointer; display: flex;
+  align-items: center; justify-content: center; font-size: 16px;
+}
+.modal-close:hover { background: var(--error); color: white; border-color: var(--error); }
+.modal-body { padding: 20px 24px; }
+.modal-footer {
+  padding: 14px 24px; border-top: 1px solid var(--border);
+  display: flex; justify-content: flex-end; gap: 8px;
+  background: var(--surface2);
+}
+
+/* Form */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group.full { grid-column: 1/-1; }
+.form-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); font-weight: 600; }
+.form-input, .form-select {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 2px; padding: 8px 11px; color: var(--text);
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; outline: none;
+  transition: border-color 0.15s; width: 100%;
+}
+.form-input:focus, .form-select:focus { border-color: var(--ink); }
+.form-select option { background: var(--bg); }
+
+/* Toast */
+.toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 300; display: flex; flex-direction: column; gap: 6px; }
+.toast {
+  background: var(--ink); color: #f5f0e8;
+  border-radius: 2px; padding: 10px 14px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; min-width: 260px;
+  animation: toastIn 0.25s ease;
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.15);
+}
+.toast.error { background: var(--error); }
+.toast.success { border-left: 3px solid var(--success); }
+@keyframes toastIn { from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)} }
+
+/* Loading/Empty */
+.loading { display: flex; align-items: center; justify-content: center; padding: 40px; color: var(--text-dim); font-size: 11px; gap: 10px; }
+.spinner { width: 18px; height: 18px; border: 2px solid var(--border); border-top-color: var(--ink); border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+.empty-state { text-align: center; padding: 40px; color: var(--text-dim); }
+.empty-state .big { font-size: 28px; margin-bottom: 8px; }
+.empty-state p { font-size: 11px; }
+
+/* Resultado */
+.resultado-card { background: var(--bg); border: 1px solid var(--border); border-top: 3px solid var(--ink); padding: 16px; margin-top: 10px; border-radius: 2px; }
+.resultado-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 11px; }
+.resultado-row:last-child { border-bottom: none; }
+.resultado-label { color: var(--text-dim); }
+
+/* Login */
+.login-overlay {
+  position: fixed; inset: 0; background: var(--ink);
+  z-index: 500; display: flex; align-items: center; justify-content: center;
+}
+.login-box {
+  width: 420px; max-width: 95vw;
+  animation: modalIn 0.4s ease;
+}
+.login-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 64px; color: #f5f0e8; letter-spacing: 6px;
+  line-height: 1; margin-bottom: 4px;
+}
+.login-logo span { color: var(--accent); }
+.login-sub { font-size: 9px; color: rgba(245,240,232,0.35); letter-spacing: 5px; text-transform: uppercase; margin-bottom: 48px; }
+.login-divider { width: 40px; height: 2px; background: var(--accent); margin-bottom: 32px; }
+.login-label { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: rgba(245,240,232,0.4); margin-bottom: 8px; }
+.login-input {
+  width: 100%; background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(245,240,232,0.15);
+  border-bottom: 2px solid rgba(245,240,232,0.3);
+  padding: 12px 14px; color: #f5f0e8;
+  font-family: 'JetBrains Mono', monospace; font-size: 14px;
+  outline: none; margin-bottom: 20px; border-radius: 0;
+  transition: border-color 0.2s;
+}
+.login-input:focus { border-bottom-color: var(--accent); }
+.login-input::placeholder { color: rgba(245,240,232,0.2); }
+.login-btn {
+  width: 100%; padding: 14px;
+  background: var(--accent); color: #f5f0e8;
+  font-family: 'Bebas Neue', sans-serif; font-size: 18px;
+  letter-spacing: 4px; border: none; cursor: pointer;
+  transition: background 0.2s; border-radius: 0;
+}
+.login-btn:hover { background: #a82d22; }
+.login-error {
+  background: rgba(200,57,43,0.15); border: 1px solid rgba(200,57,43,0.3);
+  padding: 10px 14px; font-size: 11px; color: #ff8577;
+  margin-bottom: 16px; display: none; border-radius: 2px;
+}
+.login-error.show { display: block; }
+
+/* Pages */
+.page { display: none; }
+.page.active { display: block; }
+
+/* Tabs */
+.tabs { display: flex; gap: 0; margin-bottom: 20px; border-bottom: 2px solid var(--ink); }
+.tab {
+  padding: 8px 20px; font-size: 10px; letter-spacing: 1.5px;
+  text-transform: uppercase; cursor: pointer; color: var(--text-dim);
+  border: 1px solid transparent; border-bottom: none; margin-bottom: -2px;
+  transition: all 0.15s;
+}
+.tab:hover { color: var(--text); background: var(--surface2); }
+.tab.active { background: var(--ink); color: #f5f0e8; border-color: var(--ink); }
+
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .form-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}
+}
+.menu-toggle{display:none;background:none;border:none;color:var(--ink);font-size:20px;cursor:pointer}
+@media(max-width:768px){.menu-toggle{display:block}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-overlay" id="login-overlay">
+  <div class="login-box">
+    <div class="login-logo">CIBER<span>TEC</span></div>
+    <div class="login-sub">Sistema de Gestión Académica</div>
+    <div class="login-divider"></div>
+    <div class="login-error" id="login-error">API Key inválida o no autorizada</div>
+    <div class="login-label">API Key de Acceso</div>
+    <input class="login-input" id="login-key" placeholder="Ingresa tu API Key..." type="password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">ACCEDER AL SISTEMA</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app" style="display:none">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">CIBER<span>TEC</span></div>
+      <div class="logo-sub">Sistema Académico</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-section-label">Gestión</div>
+      <div class="nav-item active" onclick="navigate('alumnos')"><span class="nav-icon">👤</span>Alumnos</div>
+      <div class="nav-item" onclick="navigate('docentes')"><span class="nav-icon">🎓</span>Docentes</div>
+      <div class="nav-item" onclick="navigate('cursos')"><span class="nav-icon">📚</span>Cursos</div>
+      <div class="nav-section-label">Académico</div>
+      <div class="nav-item" onclick="navigate('matriculas')"><span class="nav-icon">📋</span>Matrículas</div>
+      <div class="nav-item" onclick="navigate('notas')"><span class="nav-icon">📊</span>Notas</div>
+      <div class="nav-item" onclick="navigate('asistencias')"><span class="nav-icon">✅</span>Asistencias</div>
+      <div class="nav-section-label">Sistema</div>
+      <div class="nav-item" onclick="navigate('cuentas')"><span class="nav-icon">🔐</span>Cuentas</div>
+    </nav>
+    <div class="nav-bottom">
+      <div class="nav-item" onclick="doLogout()"><span class="nav-icon">🚪</span>Cerrar sesión</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+      <span class="topbar-title" id="topbar-title">Alumnos</span>
+      <span class="topbar-key" id="topbar-key"></span>
+      <div class="status-dot"></div>
+    </div>
+    <div class="content">
+
+      <!-- ALUMNOS -->
+      <div class="page active" id="page-alumnos">
+        <div class="section-header">
+          <h1 class="section-title">Gestión de <em>Alumnos</em></h1>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-ghost" onclick="resetAlumnoForm();openModal('modal-alumno')">+ Nuevo Alumno</button>
+            <button class="btn btn-primary" onclick="openModal('modal-alumno-cuenta')">+ Alumno con Cuenta</button>
+          </div>
+        </div>
+        <div class="stats-grid" id="stats-alumnos"></div>
+        <div class="table-card">
+          <div class="table-toolbar">
+            <input class="search-input" placeholder="Buscar alumno..." oninput="filterTable('tabla-alumnos',this.value)">
+            <button class="btn btn-ghost btn-sm" onclick="loadAlumnos()">↺ Actualizar</button>
+          </div>
+          <div class="table-wrap">
+            <table id="tabla-alumnos">
+              <thead><tr><th>Código</th><th>Nombre</th><th>Apellido</th><th>Email</th><th>Acciones</th></tr></thead>
+              <tbody id="tbody-alumnos"><tr><td colspan="5"><div class="loading"><div class="spinner"></div> Cargando...</div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- DOCENTES -->
+      <div class="page" id="page-docentes">
+        <div class="section-header">
+          <h1 class="section-title">Gestión de <em>Docentes</em></h1>
+          <button class="btn btn-ghost" onclick="resetDocenteForm();openModal('modal-docente')">+ Nuevo Docente</button>
+        </div>
+        <div class="table-card">
+          <div class="table-toolbar">
+            <input class="search-input" placeholder="Buscar docente..." oninput="filterTable('tabla-docentes',this.value)">
+            <button class="btn btn-ghost btn-sm" onclick="loadDocentes()">↺ Actualizar</button>
+          </div>
+          <div class="table-wrap">
+            <table id="tabla-docentes">
+              <thead><tr><th>Código</th><th>Nombre</th><th>Apellido</th><th>Email</th><th>Especialidad</th><th>Acciones</th></tr></thead>
+              <tbody id="tbody-docentes"><tr><td colspan="6"><div class="loading"><div class="spinner"></div> Cargando...</div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- CURSOS -->
+      <div class="page" id="page-cursos">
+        <div class="section-header">
+          <h1 class="section-title">Gestión de <em>Cursos</em></h1>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-ghost" onclick="openModal('modal-curso')">+ Nuevo Curso</button>
+            <button class="btn btn-primary" onclick="openModal('modal-asignar-docente')">Asignar Docente</button>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-toolbar">
+            <input class="search-input" placeholder="Buscar curso..." oninput="filterTable('tabla-cursos',this.value)">
+            <button class="btn btn-ghost btn-sm" onclick="loadCursos()">↺ Actualizar</button>
+          </div>
+          <div class="table-wrap">
+            <table id="tabla-cursos">
+              <thead><tr><th>Nro</th><th>Nombre</th><th>Ciclo</th><th>Docente</th><th>Acciones</th></tr></thead>
+              <tbody id="tbody-cursos"><tr><td colspan="5"><div class="loading"><div class="spinner"></div> Cargando...</div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- MATRICULAS -->
+      <div class="page" id="page-matriculas">
+        <div class="section-header">
+          <h1 class="section-title">Gestión de <em>Matrículas</em></h1>
+          <button class="btn btn-ghost" onclick="openModal('modal-matricula')">+ Nueva Matrícula</button>
+        </div>
+        <div class="table-card">
+          <div class="table-toolbar">
+            <input class="search-input" placeholder="Buscar matrícula..." oninput="filterTable('tabla-matriculas',this.value)">
+            <button class="btn btn-ghost btn-sm" onclick="loadMatriculas()">↺ Actualizar</button>
+          </div>
+          <div class="table-wrap">
+            <table id="tabla-matriculas">
+              <thead><tr><th>Código</th><th>Alumno</th><th>Curso</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr></thead>
+              <tbody id="tbody-matriculas"><tr><td colspan="6"><div class="loading"><div class="spinner"></div> Cargando...</div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTAS -->
+      <div class="page" id="page-notas">
+        <div class="section-header">
+          <h1 class="section-title">Gestión de <em>Notas</em></h1>
+          <button class="btn btn-ghost" onclick="openModal('modal-nota')">+ Nueva Nota</button>
+        </div>
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab(this,'tab-notas-lista')">Lista de Notas</div>
+          <div class="tab" onclick="switchTab(this,'tab-notas-resultado')">Resultado Final</div>
+        </div>
+        <div id="tab-notas-lista">
+          <div class="table-card">
+            <div class="table-toolbar">
+              <input class="search-input" placeholder="Buscar nota..." oninput="filterTable('tabla-notas',this.value)">
+              <button class="btn btn-ghost btn-sm" onclick="loadNotas()">↺ Actualizar</button>
+            </div>
+            <div class="table-wrap">
+              <table id="tabla-notas">
+                <thead><tr><th>Código</th><th>Matrícula</th><th>Tipo</th><th>Nota</th><th>Fecha Eval.</th><th>Observaciones</th><th>Acciones</th></tr></thead>
+                <tbody id="tbody-notas"><tr><td colspan="7"><div class="loading"><div class="spinner"></div> Cargando...</div></td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div id="tab-notas-resultado" style="display:none">
+          <div class="table-card">
+            <div class="table-toolbar">
+              <span style="font-size:11px;color:var(--text-dim)">Consultar resultado final (T1×30% + T2×30% + EF×40%):</span>
+              <input class="form-input" id="resultado-cod" placeholder="Código matrícula" type="number" style="max-width:160px">
+              <button class="btn btn-primary btn-sm" onclick="consultarResultado()">Calcular</button>
+            </div>
+            <div id="resultado-container" style="padding:0 16px 16px"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ASISTENCIAS -->
+      <div class="page" id="page-asistencias">
+        <div class="section-header">
+          <h1 class="section-title">Gestión de <em>Asistencias</em></h1>
+          <button class="btn btn-ghost" onclick="openModal('modal-asistencia')">+ Registrar</button>
+        </div>
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab(this,'tab-asist-lista')">Lista</div>
+          <div class="tab" onclick="switchTab(this,'tab-asist-porcentaje')">Porcentaje</div>
+        </div>
+        <div id="tab-asist-lista">
+          <div class="table-card">
+            <div class="table-toolbar">
+              <input class="search-input" placeholder="Buscar asistencia..." oninput="filterTable('tabla-asistencias',this.value)">
+              <button class="btn btn-ghost btn-sm" onclick="loadAsistencias()">↺ Actualizar</button>
+            </div>
+            <div class="table-wrap">
+              <table id="tabla-asistencias">
+                <thead><tr><th>Código</th><th>Matrícula</th><th>Fecha</th><th>Estado</th><th>Observaciones</th><th>Acciones</th></tr></thead>
+                <tbody id="tbody-asistencias"><tr><td colspan="6"><div class="loading"><div class="spinner"></div> Cargando...</div></td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div id="tab-asist-porcentaje" style="display:none">
+          <div class="table-card">
+            <div class="table-toolbar">
+              <span style="font-size:11px;color:var(--text-dim)">Porcentaje de asistencia por matrícula:</span>
+              <input class="form-input" id="porcentaje-cod" placeholder="Código matrícula" type="number" style="max-width:160px">
+              <button class="btn btn-primary btn-sm" onclick="consultarPorcentaje()">Consultar</button>
+            </div>
+            <div id="porcentaje-container" style="padding:0 16px 16px;font-size:12px"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CUENTAS -->
+      <div class="page" id="page-cuentas">
+        <div class="section-header">
+          <h1 class="section-title">Gestión de <em>Cuentas</em></h1>
+          <button class="btn btn-ghost" onclick="openModal('modal-cuenta')">+ Nueva Cuenta</button>
+        </div>
+        <div class="table-card">
+          <div class="table-toolbar">
+            <input class="search-input" placeholder="Buscar cuenta..." oninput="filterTable('tabla-cuentas',this.value)">
+            <button class="btn btn-ghost btn-sm" onclick="loadCuentas()">↺ Actualizar</button>
+          </div>
+          <div class="table-wrap">
+            <table id="tabla-cuentas">
+              <thead><tr><th>Usuario</th><th>Correo</th><th>Alumno</th><th>Acciones</th></tr></thead>
+              <tbody id="tbody-cuentas"><tr><td colspan="4"><div class="loading"><div class="spinner"></div> Cargando...</div></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- MODALS -->
+
+<!-- Alumno -->
+<div class="modal-overlay" id="modal-alumno">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title" id="modal-alumno-title">Nuevo Alumno</span><button class="modal-close" onclick="closeModal('modal-alumno')">×</button></div>
+    <div class="modal-body"><input type="hidden" id="alumno-id">
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Nombre</label><input class="form-input" id="alumno-nom" placeholder="Nombre"></div>
+        <div class="form-group"><label class="form-label">Apellido</label><input class="form-input" id="alumno-ape" placeholder="Apellido"></div>
+        <div class="form-group full"><label class="form-label">Email</label><input class="form-input" id="alumno-ema" placeholder="correo@ejemplo.com" type="email"></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-alumno')">Cancelar</button><button class="btn btn-primary" onclick="saveAlumno()">Guardar</button></div>
+  </div>
+</div>
+
+<!-- Alumno con Cuenta -->
+<div class="modal-overlay" id="modal-alumno-cuenta">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Nuevo Alumno + Cuenta</span><button class="modal-close" onclick="closeModal('modal-alumno-cuenta')">×</button></div>
+    <div class="modal-body">
+      <p style="font-size:10px;color:var(--text-dim);margin-bottom:16px;letter-spacing:0.5px">Crea el alumno y su cuenta de acceso en un solo paso.</p>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Nombre</label><input class="form-input" id="ac-nom" placeholder="Nombre"></div>
+        <div class="form-group"><label class="form-label">Apellido</label><input class="form-input" id="ac-ape" placeholder="Apellido"></div>
+        <div class="form-group full"><label class="form-label">Email Alumno</label><input class="form-input" id="ac-ema" placeholder="correo@ejemplo.com" type="email"></div>
+        <div class="form-group full" style="border-top:1px solid var(--border);padding-top:14px;margin-top:4px"><label class="form-label" style="color:var(--accent2)">— Datos de Cuenta —</label></div>
+        <div class="form-group"><label class="form-label">Código Usuario</label><input class="form-input" id="ac-user" placeholder="usuario123"></div>
+        <div class="form-group"><label class="form-label">Contraseña</label><input class="form-input" id="ac-pass" placeholder="••••••••" type="password"></div>
+        <div class="form-group full"><label class="form-label">Correo Cuenta</label><input class="form-input" id="ac-correo" placeholder="correo@ejemplo.com" type="email"></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-alumno-cuenta')">Cancelar</button><button class="btn btn-primary" onclick="saveAlumnoConCuenta()">Crear Todo</button></div>
+  </div>
+</div>
+
+<!-- Docente -->
+<div class="modal-overlay" id="modal-docente">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title" id="modal-docente-title">Nuevo Docente</span><button class="modal-close" onclick="closeModal('modal-docente')">×</button></div>
+    <div class="modal-body"><input type="hidden" id="docente-id">
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">Nombre</label><input class="form-input" id="docente-nom" placeholder="Nombre"></div>
+        <div class="form-group"><label class="form-label">Apellido</label><input class="form-input" id="docente-ape" placeholder="Apellido"></div>
+        <div class="form-group full"><label class="form-label">Email</label><input class="form-input" id="docente-ema" placeholder="correo@ejemplo.com" type="email"></div>
+        <div class="form-group full"><label class="form-label">Especialidad</label><input class="form-input" id="docente-esp" placeholder="Especialidad"></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-docente')">Cancelar</button><button class="btn btn-primary" onclick="saveDocente()">Guardar</button></div>
+  </div>
+</div>
+
+<!-- Curso -->
+<div class="modal-overlay" id="modal-curso">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Nuevo Curso</span><button class="modal-close" onclick="closeModal('modal-curso')">×</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full"><label class="form-label">Nombre del Curso</label><input class="form-input" id="curso-nom" placeholder="Nombre del curso"></div>
+        <div class="form-group full"><label class="form-label">Ciclo</label><input class="form-input" id="curso-ciclo" placeholder="Ej: I, II, III"></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-curso')">Cancelar</button><button class="btn btn-primary" onclick="saveCurso()">Guardar</button></div>
+  </div>
+</div>
+
+<!-- Asignar Docente a Curso -->
+<div class="modal-overlay" id="modal-asignar-docente">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Asignar Docente a Curso</span><button class="modal-close" onclick="closeModal('modal-asignar-docente')">×</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full"><label class="form-label">Nro de Curso</label><input class="form-input" id="asignar-curso" placeholder="ID del curso" type="number"></div>
+        <div class="form-group full"><label class="form-label">Código de Docente</label><input class="form-input" id="asignar-docente" placeholder="ID del docente" type="number"></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-asignar-docente')">Cancelar</button><button class="btn btn-primary" onclick="asignarDocente()">Asignar</button></div>
+  </div>
+</div>
+
+<!-- Matricula -->
+<div class="modal-overlay" id="modal-matricula">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Nueva Matrícula</span><button class="modal-close" onclick="closeModal('modal-matricula')">×</button></div>
+    <div class="modal-body">
+      <p style="font-size:10px;color:var(--text-dim);margin-bottom:14px">El alumno y el curso deben existir previamente.</p>
+      <div class="form-grid">
+        <div class="form-group full"><label class="form-label">Código de Alumno</label><input class="form-input" id="matricula-alumno" placeholder="ID del alumno" type="number"></div>
+        <div class="form-group full"><label class="form-label">Código de Curso</label><input class="form-input" id="matricula-curso" placeholder="ID del curso" type="number"></div>
+        <div class="form-group full"><label class="form-label">Fecha de Matrícula</label><input class="form-input" id="matricula-fecha" type="date"></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-matricula')">Cancelar</button><button class="btn btn-primary" onclick="saveMatricula()">Guardar</button></div>
+  </div>
+</div>
+
+<!-- Nota -->
+<div class="modal-overlay" id="modal-nota">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Nueva Nota</span><button class="modal-close" onclick="closeModal('modal-nota')">×</button></div>
+    <div class="modal-body">
+      <p style="font-size:10px;color:var(--text-dim);margin-bottom:14px">La matrícula debe existir. Promedio: T1×30% + T2×30% + EF×40%</p>
+      <div class="form-grid">
+        <div class="form-group full"><label class="form-label">Código de Matrícula</label><input class="form-input" id="nota-matricula" placeholder="ID de matrícula" type="number"></div>
+        <div class="form-group full">
+          <label class="form-label">Tipo de Evaluación</label>
+          <select class="form-select" id="nota-tipo">
+            <option value="T1">T1 — Trabajo 1 (peso 30%)</option>
+            <option value="T2">T2 — Trabajo 2 (peso 30%)</option>
+            <option value="EF">EF — Examen Final (peso 40%)</option>
+          </select>
+        </div>
+        <div class="form-group full"><label class="form-label">Nota (0 - 20)</label><input class="form-input" id="nota-valor" placeholder="Ej: 15.5" type="number" min="0" max="20" step="0.5"></div>
+        <div class="form-group full"><label class="form-label">Fecha de Evaluación</label><input class="form-input" id="nota-fecha" type="date"></div>
+        <div class="form-group full"><label class="form-label">Observaciones</label><input class="form-input" id="nota-obs" placeholder="Opcional"></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-nota')">Cancelar</button><button class="btn btn-primary" onclick="saveNota()">Guardar</button></div>
+  </div>
+</div>
+
+<!-- Asistencia -->
+<div class="modal-overlay" id="modal-asistencia">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Registrar Asistencia</span><button class="modal-close" onclick="closeModal('modal-asistencia')">×</button></div>
+    <div class="modal-body">
+      <p style="font-size:10px;color:var(--text-dim);margin-bottom:14px">No puede haber dos asistencias en la misma fecha para la misma matrícula.</p>
+      <div class="form-grid">
+        <div class="form-group full"><label class="form-label">Código de Matrícula</label><input class="form-input" id="asistencia-matricula" placeholder="ID de matrícula" type="number"></div>
+        <div class="form-group full"><label class="form-label">Fecha</label><input class="form-input" id="asistencia-fecha" type="date"></div>
+        <div class="form-group full">
+          <label class="form-label">Estado</label>
+          <select class="form-select" id="asistencia-estado">
+            <option value="PRESENTE">✅ Presente</option>
+            <option value="TARDANZA">⚠️ Tardanza</option>
+            <option value="FALTA">❌ Falta</option>
+          </select>
+        </div>
+        <div class="form-group full"><label class="form-label">Observaciones</label><input class="form-input" id="asistencia-obs" placeholder="Opcional"></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-asistencia')">Cancelar</button><button class="btn btn-primary" onclick="saveAsistencia()">Guardar</button></div>
+  </div>
+</div>
+
+<!-- Cuenta -->
+<div class="modal-overlay" id="modal-cuenta">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">Nueva Cuenta</span><button class="modal-close" onclick="closeModal('modal-cuenta')">×</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full"><label class="form-label">Código de Usuario</label><input class="form-input" id="cuenta-usuario" placeholder="usuario123"></div>
+        <div class="form-group full"><label class="form-label">Correo</label><input class="form-input" id="cuenta-correo" placeholder="correo@ejemplo.com" type="email"></div>
+        <div class="form-group full"><label class="form-label">Contraseña</label><input class="form-input" id="cuenta-pass" placeholder="••••••••" type="password"></div>
+        <div class="form-group full"><label class="form-label">Código de Alumno</label><input class="form-input" id="cuenta-alumno" placeholder="ID del alumno" type="number"></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-cuenta')">Cancelar</button><button class="btn btn-primary" onclick="saveCuenta()">Guardar</button></div>
+  </div>
+</div>
+
+<div class="toast-container" id="toasts"></div>
+
+<script>
+// ============ CONFIG ============
+const API = {
+  auth:        'http://localhost:8080/api/auth',
+  alumnos:     'http://localhost:9001/api/alumno',
+  cursos:      'http://localhost:9003/api/curso',
+  docentes:    'http://localhost:9004/api/docente',
+  matriculas:  'http://localhost:9005/api/matriculas',
+  notas:       'http://localhost:9006/api/notas',
+  asistencias: 'http://localhost:9002/api/asistencias',
+  cuentas:     'http://localhost:9007/api/cuenta',
+};
+
+// ============ LOGIN ============
+async function doLogin() {
+  const key = document.getElementById('login-key').value.trim();
+  if (!key) { showLoginError('Ingresa tu API Key'); return; }
+  try {
+    const res = await fetch(`${API.auth}/validar/${encodeURIComponent(key)}`);
+    if (res.ok) {
+      sessionStorage.setItem('apiKey', key);
+      document.getElementById('login-overlay').style.display = 'none';
+      document.getElementById('app').style.display = 'flex';
+      document.getElementById('topbar-key').textContent = '🔑 ' + key.substring(0,6) + '...';
+      loadAlumnos();
+    } else {
+      showLoginError('API Key inválida o no autorizada');
+    }
+  } catch {
+    showLoginError('No se pudo conectar al servidor de autenticación');
+  }
+}
+
+function showLoginError(msg) {
+  const e = document.getElementById('login-error');
+  e.textContent = msg; e.classList.add('show');
+}
+
+function doLogout() {
+  sessionStorage.removeItem('apiKey');
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-overlay').style.display = 'flex';
+  document.getElementById('login-key').value = '';
+  document.getElementById('login-error').classList.remove('show');
+}
+
+// ============ NAVIGATION ============
+const titles = {alumnos:'Alumnos',docentes:'Docentes',cursos:'Cursos',matriculas:'Matrículas',notas:'Notas',asistencias:'Asistencias',cuentas:'Cuentas'};
+const loaders = {alumnos:loadAlumnos,docentes:loadDocentes,cursos:loadCursos,matriculas:loadMatriculas,notas:loadNotas,asistencias:loadAsistencias,cuentas:loadCuentas};
+
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>{if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes(`'${page}'`))n.classList.add('active');});
+  document.getElementById('topbar-title').textContent = titles[page];
+  loaders[page]();
+  if(window.innerWidth<=768) document.getElementById('sidebar').classList.remove('open');
+}
+
+// ============ TABS ============
+function switchTab(el, tabId) {
+  const page = el.closest('.page');
+  page.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  // hide all tab content in this page
+  ['tab-notas-lista','tab-notas-resultado','tab-asist-lista','tab-asist-porcentaje'].forEach(id=>{
+    const el2=document.getElementById(id);
+    if(el2) el2.style.display='none';
+  });
+  document.getElementById(tabId).style.display='block';
+}
+
+// ============ MODAL ============
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
+
+// ============ TOAST ============
+function toast(msg,type='success'){
+  const el=document.createElement('div');
+  el.className=`toast ${type}`;
+  el.innerHTML=`<span>${type==='success'?'✓':'✗'}</span><span>${msg}</span>`;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(()=>el.remove(),3500);
+}
+
+// ============ FILTER ============
+function filterTable(id,q){
+  document.querySelectorAll(`#${id} tbody tr`).forEach(r=>{
+    r.style.display=r.textContent.toLowerCase().includes(q.toLowerCase())?'':'none';
+  });
+}
+
+// ============ API HELPER ============
+async function apiFetch(url,opts={}) {
+  const res=await fetch(url,{headers:{'Content-Type':'application/json'},...opts});
+  if(!res.ok) {
+    const text = await res.text().catch(()=>'');
+    throw new Error(text || 'Error '+res.status);
+  }
+  const ct=res.headers.get('content-type');
+  return ct&&ct.includes('application/json')?await res.json():await res.text();
+}
+function loadingRow(t,c){t.innerHTML=`<tr><td colspan="${c}"><div class="loading"><div class="spinner"></div> Cargando...</div></td></tr>`;}
+function errorRow(t,c,msg='No se pudo conectar al servicio'){t.innerHTML=`<tr><td colspan="${c}"><div class="empty-state"><div class="big">⚠</div><p>${msg}</p></div></td></tr>`;}
+function emptyRow(t,c,i,m){t.innerHTML=`<tr><td colspan="${c}"><div class="empty-state"><div class="big">${i}</div><p>${m}</p></div></td></tr>`;}
+
+// ============ ALUMNOS ============
+async function loadAlumnos() {
+  const tbody=document.getElementById('tbody-alumnos'); loadingRow(tbody,5);
+  try {
+    const data=await apiFetch(`${API.alumnos}/listAllAlumnos`);
+    document.getElementById('stats-alumnos').innerHTML=`
+      <div class="stat-card"><div class="stat-label">Total Alumnos</div><div class="stat-value">${data.length}</div></div>`;
+    if(!data.length){emptyRow(tbody,5,'👤','No hay alumnos registrados');return;}
+    tbody.innerHTML=data.map(a=>`<tr>
+      <td class="id-cell">#${a.codAlumno}</td>
+      <td>${a.nomAlumno||'—'}</td><td>${a.apeAlumno||'—'}</td><td>${a.emaAlumno||'—'}</td>
+      <td><div class="td-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editAlumno(${a.codAlumno},'${esc(a.nomAlumno)}','${esc(a.apeAlumno)}','${esc(a.emaAlumno)}')">Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteAlumno(${a.codAlumno})">Eliminar</button>
+      </div></td></tr>`).join('');
+  } catch(e) { errorRow(tbody,5); }
+}
+
+function esc(s){return (s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');}
+function resetAlumnoForm(){document.getElementById('alumno-id').value='';document.getElementById('alumno-nom').value='';document.getElementById('alumno-ape').value='';document.getElementById('alumno-ema').value='';document.getElementById('modal-alumno-title').textContent='Nuevo Alumno';}
+function editAlumno(id,nom,ape,ema){document.getElementById('alumno-id').value=id;document.getElementById('alumno-nom').value=nom;document.getElementById('alumno-ape').value=ape;document.getElementById('alumno-ema').value=ema;document.getElementById('modal-alumno-title').textContent='Editar Alumno';openModal('modal-alumno');}
+
+async function saveAlumno() {
+  const id=document.getElementById('alumno-id').value;
+  const body={nomAlumno:document.getElementById('alumno-nom').value,apeAlumno:document.getElementById('alumno-ape').value,emaAlumno:document.getElementById('alumno-ema').value};
+  try {
+    if(id){await apiFetch(`${API.alumnos}/editAlumnos/${id}`,{method:'PUT',body:JSON.stringify(body)});toast('Alumno actualizado');}
+    else{await apiFetch(`${API.alumnos}/createAlumno`,{method:'POST',body:JSON.stringify(body)});toast('Alumno creado');}
+    closeModal('modal-alumno'); loadAlumnos();
+  } catch(e){toast('Error: '+e.message,'error');}
+}
+
+async function saveAlumnoConCuenta() {
+  const body={
+    alumno:{nomAlumno:document.getElementById('ac-nom').value,apeAlumno:document.getElementById('ac-ape').value,emaAlumno:document.getElementById('ac-ema').value},
+    cuenta:{codUsuario:document.getElementById('ac-user').value,contrasena:document.getElementById('ac-pass').value,correo:document.getElementById('ac-correo').value}
+  };
+  try {
+    await apiFetch(`${API.alumnos}/createAlumnoConCuenta`,{method:'POST',body:JSON.stringify(body)});
+    toast('Alumno y cuenta creados correctamente');
+    closeModal('modal-alumno-cuenta'); loadAlumnos();
+  } catch(e){toast('Error: '+e.message,'error');}
+}
+
+async function deleteAlumno(id) {
+  if(!confirm('¿Eliminar este alumno? También se eliminará su cuenta.'))return;
+  try{await apiFetch(`${API.alumnos}/deleteAlumno/${id}`,{method:'DELETE'});toast('Alumno y cuenta eliminados');loadAlumnos();}
+  catch(e){toast('Error: '+e.message,'error');}
+}
+
+// ============ DOCENTES ============
+async function loadDocentes() {
+  const tbody=document.getElementById('tbody-docentes'); loadingRow(tbody,6);
+  try {
+    const data=await apiFetch(`${API.docentes}/listAllDocentes`);
+    if(!data.length){emptyRow(tbody,6,'🎓','No hay docentes registrados');return;}
+    tbody.innerHTML=data.map(d=>`<tr>
+      <td class="id-cell">#${d.codDocente}</td>
+      <td>${d.nomDocente||'—'}</td><td>${d.apeDocente||'—'}</td><td>${d.emaDocente||'—'}</td>
+      <td>${d.especialidad?`<span class="badge badge-blue">${d.especialidad}</span>`:'—'}</td>
+      <td><div class="td-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editDocente(${d.codDocente},'${esc(d.nomDocente)}','${esc(d.apeDocente)}','${esc(d.emaDocente)}','${esc(d.especialidad)}')">Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteDocente(${d.codDocente})">Eliminar</button>
+      </div></td></tr>`).join('');
+  } catch { errorRow(tbody,6); }
+}
+
+function resetDocenteForm(){['docente-id','docente-nom','docente-ape','docente-ema','docente-esp'].forEach(id=>document.getElementById(id).value='');document.getElementById('modal-docente-title').textContent='Nuevo Docente';}
+function editDocente(id,nom,ape,ema,esp){document.getElementById('docente-id').value=id;document.getElementById('docente-nom').value=nom;document.getElementById('docente-ape').value=ape;document.getElementById('docente-ema').value=ema;document.getElementById('docente-esp').value=esp;document.getElementById('modal-docente-title').textContent='Editar Docente';openModal('modal-docente');}
+
+async function saveDocente() {
+  const id=document.getElementById('docente-id').value;
+  const body={nomDocente:document.getElementById('docente-nom').value,apeDocente:document.getElementById('docente-ape').value,emaDocente:document.getElementById('docente-ema').value,especialidad:document.getElementById('docente-esp').value};
+  try {
+    if(id){await apiFetch(`${API.docentes}/editDocentes/${id}`,{method:'PUT',body:JSON.stringify(body)});toast('Docente actualizado');}
+    else{await apiFetch(`${API.docentes}/createDocente`,{method:'POST',body:JSON.stringify(body)});toast('Docente creado');}
+    closeModal('modal-docente'); loadDocentes();
+  } catch(e){toast('Error: '+e.message,'error');}
+}
+
+async function deleteDocente(id){
+  if(!confirm('¿Eliminar este docente?'))return;
+  try{await apiFetch(`${API.docentes}/deleteDocente/${id}`,{method:'DELETE'});toast('Docente eliminado');loadDocentes();}
+  catch(e){toast('Error: '+e.message,'error');}
+}
+
+// ============ CURSOS ============
+async function loadCursos() {
+  const tbody=document.getElementById('tbody-cursos'); loadingRow(tbody,5);
+  try {
+    const data=await apiFetch(`${API.cursos}/listAllCursos`);
+    if(!data.length){emptyRow(tbody,5,'📚','No hay cursos registrados');return;}
+    tbody.innerHTML=data.map(c=>`<tr>
+      <td class="id-cell">#${c.nroCurso}</td><td>${c.nomCurso||'—'}</td>
+      <td><span class="badge badge-blue">${c.ciclo||'—'}</span></td>
+      <td>${c.codDocente?`<span class="badge badge-green">Docente #${c.codDocente}</span>`:'<span class="badge badge-gray">Sin asignar</span>'}</td>
+      <td><div class="td-actions"><button class="btn btn-danger btn-sm" onclick="deleteCurso(${c.nroCurso})">Eliminar</button></div></td></tr>`).join('');
+  } catch { errorRow(tbody,5); }
+}
+
+async function saveCurso(){
+  const body={nomCurso:document.getElementById('curso-nom').value,ciclo:document.getElementById('curso-ciclo').value};
+  try{await apiFetch(`${API.cursos}/createCurso`,{method:'POST',body:JSON.stringify(body)});toast('Curso creado');closeModal('modal-curso');loadCursos();}
+  catch(e){toast('Error: '+e.message,'error');}
+}
+
+async function asignarDocente(){
+  const nroCurso=document.getElementById('asignar-curso').value;
+  const codDocente=document.getElementById('asignar-docente').value;
+  if(!nroCurso||!codDocente){toast('Completa ambos campos','error');return;}
+  try{await apiFetch(`${API.cursos}/asignarDocente/${nroCurso}/${codDocente}`,{method:'PUT'});toast('Docente asignado correctamente');closeModal('modal-asignar-docente');loadCursos();}
+  catch(e){toast('Error: '+e.message,'error');}
+}
+
+async function deleteCurso(id){
+  if(!confirm('¿Eliminar este curso?'))return;
+  try{await apiFetch(`${API.cursos}/deleteCurso/${id}`,{method:'DELETE'});toast('Curso eliminado');loadCursos();}
+  catch(e){toast('Error: '+e.message,'error');}
+}
+
+// ============ MATRICULAS ============
+async function loadMatriculas() {
+  const tbody=document.getElementById('tbody-matriculas'); loadingRow(tbody,6);
+  try {
+    const data=await apiFetch(`${API.matriculas}/listar`);
+    if(!data.length){emptyRow(tbody,6,'📋','No hay matrículas registradas');return;}
+    tbody.innerHTML=data.map(m=>`<tr>
+      <td class="id-cell">#${m.codMatricula}</td>
+      <td>Alumno #${m.codAlumno||'—'}</td><td>Curso #${m.codCurso||'—'}</td>
+      <td>${m.fechaMatricula||'—'}</td>
+      <td><span class="badge ${m.estado==='ACTIVO'?'badge-green':'badge-gray'}">${m.estado||'—'}</span></td>
+      <td><div class="td-actions"><button class="btn btn-danger btn-sm" onclick="deleteMatricula(${m.codMatricula})">Eliminar</button></div></td></tr>`).join('');
+  } catch { errorRow(tbody,6); }
+}
+
+async function saveMatricula(){
+  const body={codAlumno:parseInt(document.getElementById('matricula-alumno').value),codCurso:parseInt(document.getElementById('matricula-curso').value),fechaMatricula:document.getElementById('matricula-fecha').value};
+  try{await apiFetch(`${API.matriculas}/crearMatricula`,{method:'POST',body:JSON.stringify(body)});toast('Matrícula creada');closeModal('modal-matricula');loadMatriculas();}
+  catch(e){toast('Error: '+e.message,'error');}
+}
+
+async function deleteMatricula(id){
+  if(!confirm('¿Eliminar esta matrícula?'))return;
+  try{await apiFetch(`${API.matriculas}/${id}`,{method:'DELETE'});toast('Matrícula eliminada');loadMatriculas();}
+  catch(e){toast('Error: '+e.message,'error');}
+}
+
+// ============ NOTAS ============
+async function loadNotas() {
+  const tbody=document.getElementById('tbody-notas'); loadingRow(tbody,7);
+  try {
+    const data=await apiFetch(`${API.notas}/listar`);
+    if(!data.length){emptyRow(tbody,7,'📊','No hay notas registradas');return;}
+    tbody.innerHTML=data.map(n=>{
+      const tb=n.tipoEvaluacion==='T1'?'badge-blue':n.tipoEvaluacion==='T2'?'badge-yellow':'badge-red';
+      const nb=n.nota>=11?'badge-green':'badge-red';
+      return `<tr>
+        <td class="id-cell">#${n.codNota}</td><td>Matrícula #${n.codMatricula||'—'}</td>
+        <td><span class="badge ${tb}">${n.tipoEvaluacion||'—'}</span></td>
+        <td><span class="badge ${nb}">${n.nota??'—'}</span></td>
+        <td>${n.fechaEvaluacion||'—'}</td><td>${n.observaciones||'—'}</td>
+        <td><div class="td-actions"><button class="btn btn-danger btn-sm" onclick="deleteNota(${n.codNota})">Eliminar</button></div></td></tr>`;
+    }).join('');
+  } catch { errorRow(tbody,7); }
+}
+
+async function saveNota(){
+  const body={codMatricula:parseInt(document.getElementById('nota-matricula').value),tipoEvaluacion:document.getElementById('nota-tipo').value,nota:parseFloat(document.getElementById('nota-valor').value),fechaEvaluacion:document.getElementById('nota-fecha').value,observaciones:document.getElementById('nota-obs').value};
+  try{await apiFetch(`${API.notas}/crearNota`,{method:'POST',body:JSON.stringify(body)});toast('Nota registrada');closeModal('modal-nota');loadNotas();}
+  catch(e){toast('Error: '+e.message,'error');}
+}
+
+async function deleteNota(id){
+  if(!confirm('¿Eliminar esta nota?'))return;
+  try{await apiFetch(`${API.notas}/eliminarNota/${id}`,{method:'DELETE'});toast('Nota eliminada');loadNotas();}
+  catch(e){toast('Error: '+e.message,'error');}
+}
+
+async function consultarResultado(){
+  const cod=document.getElementById('resultado-cod').value;
+  if(!cod){toast('Ingresa un código de matrícula','error');return;}
+  const c=document.getElementById('resultado-container');
+  c.innerHTML='<div class="loading"><div class="spinner"></div> Calculando resultado...</div>';
+  try {
+    const r=await apiFetch(`${API.notas}/resultado/${cod}`);
+    const aprobado=r.estado&&r.estado.includes('APROBADO')&&!r.estado.includes('DES');
+    c.innerHTML=`<div class="resultado-card">
+      <div class="resultado-row"><span class="resultado-label">Matrícula</span><span>#${cod}</span></div>
+      <div class="resultado-row"><span class="resultado-label">Fórmula</span><span>T1×30% + T2×30% + EF×40%</span></div>
+      <div class="resultado-row"><span class="resultado-label">Promedio Final</span><span><strong>${r.promedio?.toFixed(2)??'—'}</strong></span></div>
+      <div class="resultado-row"><span class="resultado-label">% Asistencia</span><span>${r.asistencia?.toFixed(2)??'—'}%</span></div>
+      <div class="resultado-row"><span class="resultado-label">Estado</span><span class="badge ${aprobado?'badge-green':'badge-red'}">${r.estado||'—'}</span></div>
+    </div>`;
+  } catch {c.innerHTML='<p style="color:var(--error);font-size:11px;padding:12px 0">No se encontró resultado para esa matrícula</p>';}
+}
+
+// ============ ASISTENCIAS ============
+async function loadAsistencias() {
+  const tbody=document.getElementById('tbody-asistencias'); loadingRow(tbody,6);
+  try {
+    const data=await apiFetch(`${API.asistencias}/listar`);
+    if(!data.length){emptyRow(tbody,6,'✅','No hay asistencias registradas');return;}
+    tbody.innerHTML=data.map(a=>{
+      const bc=a.estado==='PRESENTE'?'badge-green':a.estado==='TARDANZA'?'badge-yellow':'badge-red';
+      const ic=a.estado==='PRESENTE'?'✅':a.estado==='TARDANZA'?'⚠️':'❌';
+      return `<tr>
+        <td class="id-cell">#${a.codAsistencia}</td><td>Matrícula #${a.codMatricula||'—'}</td>
+        <td>${a.fecha||'—'}</td>
+        <td><span class="badge ${bc}">${ic} ${a.estado||'—'}</span></td>
+        <td>${a.observaciones||'—'}</td>
+        <td><div class="td-actions"><button class="btn btn-danger btn-sm" onclick="deleteAsistencia(${a.codAsistencia})">Eliminar</button></div></td></tr>`;
+    }).join('');
+  } catch { errorRow(tbody,6); }
+}
+
+async function saveAsistencia(){
+  const body={codMatricula:parseInt(document.getElementById('asistencia-matricula').value),fecha:document.getElementById('asistencia-fecha').value,estado:document.getElementById('asistencia-estado').value,observaciones:document.getElementById('asistencia-obs').value};
+  try{await apiFetch(`${API.asistencias}/registrar`,{method:'POST',body:JSON.stringify(body)});toast('Asistencia registrada');closeModal('modal-asistencia');loadAsistencias();}
+  catch(e){toast('Error: '+e.message,'error');}
+}
+
+async function deleteAsistencia(id){
+  if(!confirm('¿Eliminar esta asistencia?'))return;
+  try{await apiFetch(`${API.asistencias}/${id}`,{method:'DELETE'});toast('Asistencia eliminada');loadAsistencias();}
+  catch(e){toast('Error: '+e.message,'error');}
+}
+
+async function consultarPorcentaje(){
+  const cod=document.getElementById('porcentaje-cod').value;
+  if(!cod){toast('Ingresa un código de matrícula','error');return;}
+  try{
+    const r=await apiFetch(`${API.asistencias}/porcentaje/${cod}`);
+    document.getElementById('porcentaje-container').innerHTML=`<div class="resultado-card"><div class="resultado-row"><span class="resultado-label">Matrícula #${cod}</span><span style="font-size:18px;font-weight:700">${r}</span></div></div>`;
+  }catch{document.getElementById('porcentaje-container').innerHTML='<p style="color:var(--error);font-size:11px;padding:12px 0">No se encontró asistencia para esa matrícula</p>';}
+}
+
+// ============ CUENTAS ============
+async function loadCuentas() {
+  const tbody=document.getElementById('tbody-cuentas'); loadingRow(tbody,4);
+  try {
+    const data=await apiFetch(`${API.cuentas}/listAllCuentas`);
+    if(!data.length){emptyRow(tbody,4,'🔐','No hay cuentas registradas');return;}
+    tbody.innerHTML=data.map(c=>`<tr>
+      <td><span class="badge badge-blue">${c.codUsuario}</span></td>
+      <td>${c.correo||'—'}</td><td>Alumno #${c.codAlumno||'—'}</td>
+      <td><div class="td-actions"><button class="btn btn-danger btn-sm" onclick="deleteCuenta(${c.codAlumno})">Eliminar</button></div></td></tr>`).join('');
+  } catch { errorRow(tbody,4); }
+}
+
+async function saveCuenta(){
+  const body={codUsuario:document.getElementById('cuenta-usuario').value,correo:document.getElementById('cuenta-correo').value,contrasena:document.getElementById('cuenta-pass').value,codAlumno:parseInt(document.getElementById('cuenta-alumno').value)};
+  try{await apiFetch(`${API.cuentas}/createCuenta`,{method:'POST',body:JSON.stringify(body)});toast('Cuenta creada');closeModal('modal-cuenta');loadCuentas();}
+  catch(e){toast('Error: '+e.message,'error');}
+}
+
+async function deleteCuenta(codAlumno){
+  if(!confirm('¿Eliminar esta cuenta?'))return;
+  try{await apiFetch(`${API.cuentas}/deleteCuentaByAlumno/${codAlumno}`,{method:'DELETE'});toast('Cuenta eliminada');loadCuentas();}
+  catch(e){toast('Error: '+e.message,'error');}
+}
+</script>
+</body>
+</html>

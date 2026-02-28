@@ -1,6 +1,7 @@
 package cibertec.pe.controller;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,7 @@ import cibertec.pe.entity.Curso;
 import cibertec.pe.model.Docente;
 import cibertec.pe.service.IDocenteService;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/docente")
 public class DocenteController {
