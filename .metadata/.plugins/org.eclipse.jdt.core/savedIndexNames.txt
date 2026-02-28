@@ -14,7 +14,6 @@ INDEX VERSION 1.134+C:\Users\WIN-10\Documents\SOAP-Server-Academico\.metadata\.p
 3718569997.index
 2883812381.index
 3132952093.index
-1707438306.index
 1039245406.index
 2413141873.index
 3689465358.index
@@ -261,7 +260,6 @@ INDEX VERSION 1.134+C:\Users\WIN-10\Documents\SOAP-Server-Academico\.metadata\.p
 3109786471.index
 3187010439.index
 3798303025.index
-1555561356.index
 2212478220.index
 227350083.index
 1118123836.index
@@ -307,7 +305,6 @@ INDEX VERSION 1.134+C:\Users\WIN-10\Documents\SOAP-Server-Academico\.metadata\.p
 1612190428.index
 1890461262.index
 3140941492.index
-1543954164.index
 609184514.index
 1041728653.index
 3394870402.index
@@ -342,8 +339,6 @@ INDEX VERSION 1.134+C:\Users\WIN-10\Documents\SOAP-Server-Academico\.metadata\.p
 1716903434.index
 1494858349.index
 1230856105.index
-1719185182.index
-1854958700.index
 1107872075.index
 724923718.index
 2550264577.index

@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import cibertec.pe.entity.Curso;
 
-@FeignClient(name ="REST-CURSO", url= "http://localhost:9003")
+@FeignClient(name ="REST-CURSO", url= "${feign.cuenta.url}")
 public interface CursoFeignClient {
 	
 	@PostMapping("/api/curso/createCurso")

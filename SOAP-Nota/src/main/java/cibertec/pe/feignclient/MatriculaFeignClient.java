@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import cibertec.pe.entity.Matricula;
 
-@FeignClient(name = "SOAP-Matricula", url = "http://localhost:9005")
+@FeignClient(name = "SOAP-Matricula", url = "${feign.cuenta.url}")
 public interface MatriculaFeignClient {
 	
 	@GetMapping("/api/matriculas/{id}")

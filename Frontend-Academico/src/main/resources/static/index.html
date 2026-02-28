@@ -696,9 +696,9 @@ tbody tr:hover { background: var(--surface2); }
         <div class="form-group full">
           <label class="form-label">Estado</label>
           <select class="form-select" id="asistencia-estado">
-            <option value="PRESENTE">✅ Presente</option>
-            <option value="TARDANZA">⚠️ Tardanza</option>
-            <option value="FALTA">❌ Falta</option>
+            <option value="PRESENTE">Presente</option>
+            <option value="TARDANZA">Tardanza</option>
+            <option value="FALTA">Falta</option>
           </select>
         </div>
         <div class="form-group full"><label class="form-label">Observaciones</label><input class="form-input" id="asistencia-obs" placeholder="Opcional"></div>
@@ -1012,7 +1012,7 @@ async function loadNotas() {
   const tbody=document.getElementById('tbody-notas'); loadingRow(tbody,7);
   try {
     const data=await apiFetch(`${API.notas}/listar`);
-    if(!data.length){emptyRow(tbody,7,'📊','No hay notas registradas');return;}
+    if(!data.length){emptyRow(tbody,7,'No hay notas registradas');return;}
     tbody.innerHTML=data.map(n=>{
       const tb=n.tipoEvaluacion==='T1'?'badge-blue':n.tipoEvaluacion==='T2'?'badge-yellow':'badge-red';
       const nb=n.nota>=11?'badge-green':'badge-red';
@@ -1061,7 +1061,7 @@ async function loadAsistencias() {
   const tbody=document.getElementById('tbody-asistencias'); loadingRow(tbody,6);
   try {
     const data=await apiFetch(`${API.asistencias}/listar`);
-    if(!data.length){emptyRow(tbody,6,'✅','No hay asistencias registradas');return;}
+    if(!data.length){emptyRow(tbody,6,'No hay asistencias registradas');return;}
     tbody.innerHTML=data.map(a=>{
       const bc=a.estado==='PRESENTE'?'badge-green':a.estado==='TARDANZA'?'badge-yellow':'badge-red';
       const ic=a.estado==='PRESENTE'?'✅':a.estado==='TARDANZA'?'⚠️':'❌';
