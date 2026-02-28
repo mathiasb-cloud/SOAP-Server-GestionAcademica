@@ -15,10 +15,11 @@ import jakarta.xml.ws.Endpoint;
 @EnableFeignClients
 public class RestDocenteApplication {
 	public static void main(String[] args) {
-		ConfigurableApplicationContext context = SpringApplication.run(RestDocenteApplication.class, args);
-
-		DocenteImplement service = context.getBean(DocenteImplement.class);
-
-		Endpoint.publish("http://localhost:8088/ws/docente", service);
+	    ConfigurableApplicationContext context = SpringApplication.run(RestDocenteApplication.class, args);
+	    
+	    DocenteImplement service = context.getBean(DocenteImplement.class);
+	    
+	    Endpoint endpoint = Endpoint.create(service);
+	    endpoint.publish("http://localhost:8088/ws/docente");
 	}
 }

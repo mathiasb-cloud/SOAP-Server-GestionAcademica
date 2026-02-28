@@ -13,11 +13,12 @@ import jakarta.xml.ws.Endpoint;
 @EnableDiscoveryClient
 @EnableFeignClients
 public class SoapCuentaApplication {
-    public static void main(String[] args) {
-        ConfigurableApplicationContext context = 
-            SpringApplication.run(SoapCuentaApplication.class, args);
-        
-        CuentaImplement service = context.getBean(CuentaImplement.class);
-        Endpoint.publish("http://localhost:8091/ws/cuenta", service); 
-    }
+	public static void main(String[] args) {
+	    ConfigurableApplicationContext context = SpringApplication.run(SoapCuentaApplication.class, args);
+	    
+	    CuentaImplement service = context.getBean(CuentaImplement.class);
+	    
+	    Endpoint endpoint = Endpoint.create(service);
+	    endpoint.publish("http://localhost:8091/ws/cuenta");
+	}
 }

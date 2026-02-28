@@ -10,9 +10,8 @@ import cibertec.pe.model.Alumno;
 import cibertec.pe.repository.IAlumnoRepository;
 import jakarta.jws.WebService;
 
-@WebService
-@Component
-
+@Service
+@WebService(endpointInterface = "cibertec.pe.service.IAlumnoService")
 public class AlumnoImplement implements IAlumnoService {
 	
 	@Autowired

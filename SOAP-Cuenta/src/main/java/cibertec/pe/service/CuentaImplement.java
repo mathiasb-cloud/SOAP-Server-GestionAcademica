@@ -6,10 +6,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import cibertec.pe.model.Cuenta;
 import cibertec.pe.repository.ICuentaRepository;
+import jakarta.jws.HandlerChain;
 import jakarta.jws.WebService;
 
 @WebService
 @Component
+@HandlerChain(file = "handler-chain.xml")
 public class CuentaImplement implements ICuentaService {
 	
 	@Autowired

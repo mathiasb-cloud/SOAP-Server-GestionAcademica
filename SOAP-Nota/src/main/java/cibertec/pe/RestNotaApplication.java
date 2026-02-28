@@ -15,10 +15,11 @@ import jakarta.xml.ws.Endpoint;
 public class RestNotaApplication {
 
 	public static void main(String[] args) {
-		ConfigurableApplicationContext context = SpringApplication.run(RestNotaApplication.class, args);
-
-		NotaServiceImpl service = context.getBean(NotaServiceImpl.class);
-
-		Endpoint.publish("http://localhost:8089/ws/nota", service);
+	    ConfigurableApplicationContext context = SpringApplication.run(RestNotaApplication.class, args);
+	    
+	    NotaServiceImpl service = context.getBean(NotaServiceImpl.class);
+	    
+	    Endpoint endpoint = Endpoint.create(service);
+	    endpoint.publish("http://localhost:8089/ws/nota");
 	}
 }

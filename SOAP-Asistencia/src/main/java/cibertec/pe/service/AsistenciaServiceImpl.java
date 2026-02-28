@@ -13,11 +13,12 @@ import cibertec.pe.model.Asistencia;
 import cibertec.pe.model.EstadoAsistencia;
 import cibertec.pe.repository.IAsistenciaRepository;
 import feign.FeignException;
+import jakarta.jws.HandlerChain;
 import jakarta.jws.WebService;
 
 @WebService
 @Component
-
+@HandlerChain(file = "handler-chain.xml")
 public class AsistenciaServiceImpl implements IAsistenciaService {
 	
 	@Autowired

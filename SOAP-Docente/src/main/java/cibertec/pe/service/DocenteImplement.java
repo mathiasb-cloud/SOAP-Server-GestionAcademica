@@ -8,10 +8,12 @@ import cibertec.pe.entity.Curso;
 import cibertec.pe.feignclient.CursoFeignClient;
 import cibertec.pe.model.Docente;
 import cibertec.pe.repository.IDocenteRepository;
+import jakarta.jws.HandlerChain;
 import jakarta.jws.WebService;
 
 @WebService
 @Component
+@HandlerChain(file = "handler-chain.xml")
 public class DocenteImplement implements IDocenteService {
 	
 	@Autowired

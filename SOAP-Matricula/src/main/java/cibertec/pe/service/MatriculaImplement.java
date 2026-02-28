@@ -9,10 +9,11 @@ import cibertec.pe.feignClient.CursoFeignClient;
 import cibertec.pe.model.Matricula;
 import cibertec.pe.repository.MatriculaRepository;
 import feign.FeignException;
+import jakarta.jws.HandlerChain;
 import jakarta.jws.WebService;
 @WebService
 @Component
-
+@HandlerChain(file = "handler-chain.xml")
 public class MatriculaImplement implements IMatriculaService {
 
     @Autowired

@@ -9,7 +9,7 @@ public class Alumno {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int codAlumno;
+	private Integer codAlumno;
 	private String nomAlumno;
 	private String apeAlumno;
 	private String emaAlumno;
@@ -23,11 +23,11 @@ public class Alumno {
 		this.emaAlumno = emaAlumno;
 	}
 	
-	public int getCodAlumno() {
+	public Integer getCodAlumno() {
 		return codAlumno;
 	}
 	
-	public void setCodAlumno(int codAlumno) {
+	public void setCodAlumno(Integer codAlumno) {
 		this.codAlumno = codAlumno;
 	}
 	

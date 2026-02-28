@@ -16,11 +16,9 @@ public class RestAlumnoApplication {
 
 	public static void main(String[] args) {
 		
-ConfigurableApplicationContext context = SpringApplication.run(RestAlumnoApplication.class, args);
+      SpringApplication.run(RestAlumnoApplication.class, args);
 		
-		AlumnoImplement service = context.getBean(AlumnoImplement.class);
 		
-		Endpoint.publish("http://localhost:8085/ws/alumno", service);
 	}
 }
 

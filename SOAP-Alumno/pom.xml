@@ -51,19 +51,19 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Jakarta SOAP API -->
-        <dependency>
-            <groupId>jakarta.xml.ws</groupId>
-            <artifactId>jakarta.xml.ws-api</artifactId>
-            <version>4.0.0</version>
-        </dependency>
+       <!-- CXF SOAP -->
+<dependency>
+    <groupId>org.apache.cxf</groupId>
+    <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
+    <version>4.0.2</version>
+</dependency>
 
-        <!-- JAX-WS Implementation (Metro) -->
-        <dependency>
-            <groupId>com.sun.xml.ws</groupId>
-            <artifactId>jaxws-rt</artifactId>
-            <version>4.0.2</version>
-        </dependency>
+<!-- WS Security -->
+<dependency>
+    <groupId>org.apache.cxf</groupId>
+    <artifactId>cxf-rt-ws-security</artifactId>
+    <version>4.0.2</version>
+</dependency>
 
         <!-- Eureka Client -->
         <dependency>
@@ -83,6 +83,39 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        
+        <dependency>
+    <groupId>org.apache.cxf</groupId>
+    <artifactId>cxf-rt-frontend-jaxws</artifactId>
+    <version>4.1.1</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.cxf</groupId>
+    <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
+    <version>4.0.2</version>
+</dependency>
+
+<!-- Apache CXF JAX-WS Starter -->
+<dependency>
+    <groupId>org.apache.cxf</groupId>
+    <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
+    <version>4.0.2</version>
+</dependency>
+
+
+<dependency>
+    <groupId>org.apache.cxf</groupId>
+    <artifactId>cxf-rt-transports-http</artifactId>
+    <version>4.0.2</version>
+</dependency>
+
+
+
+<dependency>
+    <groupId>org.apache.cxf</groupId>
+    <artifactId>cxf-rt-ws-security</artifactId>
+    <version>4.1.1</version>
+</dependency>
 
     </dependencies>
 

@@ -6,9 +6,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import cibertec.pe.model.Curso;
 import cibertec.pe.repository.ICursoRepository;
+import jakarta.jws.HandlerChain;
 import jakarta.jws.WebService;
 @WebService
 @Component
+@HandlerChain(file = "handler-chain.xml")
 public class CursoImplement implements ICursoService {
 	
 	@Autowired

@@ -14,10 +14,11 @@ import jakarta.xml.ws.Endpoint;
 @EnableFeignClients
 public class MatriculaServiceApplication {
 	public static void main(String[] args) {
-		ConfigurableApplicationContext context = SpringApplication.run(MatriculaServiceApplication.class, args);
-
-		MatriculaImplement service = context.getBean(MatriculaImplement.class);
-
-		Endpoint.publish("http://localhost:8087/ws/matricula", service);
-		}
+	    ConfigurableApplicationContext context = SpringApplication.run(MatriculaServiceApplication.class, args);
+	    
+	    MatriculaImplement service = context.getBean(MatriculaImplement.class);
+	    
+	    Endpoint endpoint = Endpoint.create(service);
+	    endpoint.publish("http://localhost:8087/ws/matricula");
+	}
 	}

@@ -6,6 +6,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import cibertec.pe.security.GlobalApiKeyHandler;
 import cibertec.pe.service.CursoImplement;
 import jakarta.xml.ws.Endpoint;
 
@@ -17,10 +18,12 @@ public class RestCursoApplication {
 
 	public static void main(String[] args) {
 		
+		
+		
 		ConfigurableApplicationContext context = SpringApplication.run(RestCursoApplication.class, args);
-				
-				CursoImplement service = context.getBean(CursoImplement.class);
-				
-				Endpoint.publish("http://localhost:8086/ws/curso", service);
+
+		CursoImplement service = context.getBean(CursoImplement.class);
+
+		Endpoint.publish("http://localhost:8086/ws/curso", service);
 			}
 		}

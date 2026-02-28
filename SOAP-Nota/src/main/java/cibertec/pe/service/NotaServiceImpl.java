@@ -14,10 +14,12 @@ import cibertec.pe.feignclient.MatriculaFeignClient;
 import cibertec.pe.model.Nota;
 import cibertec.pe.repository.INotaRepository;
 import feign.FeignException;
+import jakarta.jws.HandlerChain;
 import jakarta.jws.WebService;
 
 @WebService
 @Component
+@HandlerChain(file = "handler-chain.xml")
 public class NotaServiceImpl implements INotaService {
 	
 	@Autowired
