@@ -1,7 +1,7 @@
 services:
   - name: soap-alumno
     type: web
-    runtime: java
+    runtime: docker
     buildCommand: cd SOAP-Alumno && mvn clean package -DskipTests
     startCommand: java -jar SOAP-Alumno/target/*.jar
     envVars:
@@ -16,7 +16,7 @@ services:
 
   - name: soap-asistencia
     type: web
-    runtime: java
+    runtime: docker
     buildCommand: cd SOAP-Asistencia && mvn clean package -DskipTests
     startCommand: java -jar SOAP-Asistencia/target/*.jar
     envVars:
@@ -31,7 +31,7 @@ services:
 
   - name: soap-curso
     type: web
-    runtime: java
+    runtime: docker
     buildCommand: cd SOAP-Curso && mvn clean package -DskipTests
     startCommand: java -jar SOAP-Curso/target/*.jar
     envVars:
@@ -46,7 +46,7 @@ services:
 
   - name: soap-docente
     type: web
-    runtime: java
+    runtime: docker
     buildCommand: cd SOAP-Docente && mvn clean package -DskipTests
     startCommand: java -jar SOAP-Docente/target/*.jar
     envVars:
@@ -61,7 +61,7 @@ services:
 
   - name: soap-matricula
     type: web
-    runtime: java
+    runtime: docker
     buildCommand: cd SOAP-Matricula && mvn clean package -DskipTests
     startCommand: java -jar SOAP-Matricula/target/*.jar
     envVars:
@@ -76,7 +76,7 @@ services:
 
   - name: soap-nota
     type: web
-    runtime: java
+    runtime: docker
     buildCommand: cd SOAP-Nota && mvn clean package -DskipTests
     startCommand: java -jar SOAP-Nota/target/*.jar
     envVars:
@@ -91,7 +91,7 @@ services:
 
   - name: soap-cuenta
     type: web
-    runtime: java
+    runtime: docker
     buildCommand: cd SOAP-Cuenta && mvn clean package -DskipTests
     startCommand: java -jar SOAP-Cuenta/target/*.jar
     envVars:
@@ -106,7 +106,7 @@ services:
 
   - name: frontend-academico
     type: web
-    runtime: java
+    runtime: docker
     buildCommand: cd Frontend-Academico && mvn clean package -DskipTests
     startCommand: java -jar Frontend-Academico/target/*.jar
     envVars:
