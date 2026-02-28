@@ -11,7 +11,6 @@ import cibertec.pe.service.AsistenciaServiceImpl;
 import jakarta.xml.ws.Endpoint;
 
 @SpringBootApplication
-@EnableDiscoveryClient
 @EnableFeignClients
 public class RestAsistenciaApplication {
 	public static void main(String[] args) {

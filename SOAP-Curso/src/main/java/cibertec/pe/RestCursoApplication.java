@@ -12,7 +12,6 @@ import jakarta.xml.ws.Endpoint;
 
 
 @SpringBootApplication
-@EnableDiscoveryClient
 @EnableFeignClients
 public class RestCursoApplication {
 

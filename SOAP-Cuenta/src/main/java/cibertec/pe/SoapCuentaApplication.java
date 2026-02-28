@@ -10,7 +10,7 @@ import cibertec.pe.service.CuentaImplement;
 import jakarta.xml.ws.Endpoint;
 
 @SpringBootApplication
-@EnableDiscoveryClient
+
 @EnableFeignClients
 public class SoapCuentaApplication {
 	public static void main(String[] args) {

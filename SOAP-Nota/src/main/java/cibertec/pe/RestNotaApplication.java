@@ -10,7 +10,6 @@ import cibertec.pe.service.NotaServiceImpl;
 import jakarta.xml.ws.Endpoint;
 
 @SpringBootApplication
-@EnableDiscoveryClient
 @EnableFeignClients
 public class RestNotaApplication {
 

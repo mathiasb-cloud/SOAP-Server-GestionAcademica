@@ -2,6 +2,7 @@
 <section name="Workbench">
 	<section name="MavenProjectImportWizardPage">
 		<list key="rootDirectory">
+			<item value="C:\Users\WIN-10\Documents\SOAP-Server-Academico\Frontend-Academico"/>
 			<item value="C:\Users\WIN-10\Documents\SOAP-Server-Academico"/>
 		</list>
 		<list key="projectNameTemplate">

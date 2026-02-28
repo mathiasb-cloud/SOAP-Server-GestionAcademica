@@ -11,7 +11,6 @@ import cibertec.pe.service.DocenteImplement;
 import jakarta.xml.ws.Endpoint;
 
 @SpringBootApplication
-@EnableDiscoveryClient
 @EnableFeignClients
 public class RestDocenteApplication {
 	public static void main(String[] args) {

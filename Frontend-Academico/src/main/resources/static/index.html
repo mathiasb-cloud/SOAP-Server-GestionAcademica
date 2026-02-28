@@ -328,7 +328,7 @@ tbody tr:hover { background: var(--surface2); }
 <!-- LOGIN -->
 <div class="login-overlay" id="login-overlay">
   <div class="login-box">
-    <div class="login-logo">CIBER<span>TEC</span></div>
+    <div class="login-logo">TONI<span>REAL</span></div>
     <div class="login-sub">Sistema de Gestión Académica</div>
     <div class="login-divider"></div>
     <div class="login-error" id="login-error">API Key inválida o no autorizada</div>
@@ -342,7 +342,7 @@ tbody tr:hover { background: var(--surface2); }
 <div class="app" id="app" style="display:none">
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <div class="logo">CIBER<span>TEC</span></div>
+      <div class="logo">TONI<span>REAL</span></div>
       <div class="logo-sub">Sistema Académico</div>
     </div>
     <nav class="nav">
@@ -420,7 +420,7 @@ tbody tr:hover { background: var(--surface2); }
         <div class="section-header">
           <h1 class="section-title">Gestión de <em>Cursos</em></h1>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn btn-ghost" onclick="openModal('modal-curso')">+ Nuevo Curso</button>
+            <button class="btn btn-ghost" onclick="resetCursoForm();openModal('modal-curso')">+ Nuevo Curso</button>
             <button class="btn btn-primary" onclick="openModal('modal-asignar-docente')">Asignar Docente</button>
           </div>
         </div>
@@ -442,7 +442,7 @@ tbody tr:hover { background: var(--surface2); }
       <div class="page" id="page-matriculas">
         <div class="section-header">
           <h1 class="section-title">Gestión de <em>Matrículas</em></h1>
-          <button class="btn btn-ghost" onclick="openModal('modal-matricula')">+ Nueva Matrícula</button>
+          <button class="btn btn-ghost" onclick="resetMatriculaForm();openModal('modal-matricula')">+ Nueva Matrícula</button>
         </div>
         <div class="table-card">
           <div class="table-toolbar">
@@ -498,7 +498,7 @@ tbody tr:hover { background: var(--surface2); }
       <div class="page" id="page-asistencias">
         <div class="section-header">
           <h1 class="section-title">Gestión de <em>Asistencias</em></h1>
-          <button class="btn btn-ghost" onclick="openModal('modal-asistencia')">+ Registrar</button>
+          <button class="btn btn-ghost" onclick="resetAsistenciaForm();openModal('modal-asistencia')">+ Registrar</button>
         </div>
         <div class="tabs">
           <div class="tab active" onclick="switchTab(this,'tab-asist-lista')">Lista</div>
@@ -534,7 +534,7 @@ tbody tr:hover { background: var(--surface2); }
       <div class="page" id="page-cuentas">
         <div class="section-header">
           <h1 class="section-title">Gestión de <em>Cuentas</em></h1>
-          <button class="btn btn-ghost" onclick="openModal('modal-cuenta')">+ Nueva Cuenta</button>
+          <button class="btn btn-ghost" onclick="resetCuentaForm();openModal('modal-cuenta')">+ Nueva Cuenta</button>
         </div>
         <div class="table-card">
           <div class="table-toolbar">
@@ -610,11 +610,12 @@ tbody tr:hover { background: var(--surface2); }
 <!-- Curso -->
 <div class="modal-overlay" id="modal-curso">
   <div class="modal">
-    <div class="modal-header"><span class="modal-title">Nuevo Curso</span><button class="modal-close" onclick="closeModal('modal-curso')">×</button></div>
-    <div class="modal-body">
+    <div class="modal-header"><span class="modal-title" id="modal-curso-title">Nuevo Curso</span><button class="modal-close" onclick="closeModal('modal-curso')">×</button></div>
+    <div class="modal-body"><input type="hidden" id="curso-id">
       <div class="form-grid">
         <div class="form-group full"><label class="form-label">Nombre del Curso</label><input class="form-input" id="curso-nom" placeholder="Nombre del curso"></div>
-        <div class="form-group full"><label class="form-label">Ciclo</label><input class="form-input" id="curso-ciclo" placeholder="Ej: I, II, III"></div>
+        <div class="form-group"><label class="form-label">Ciclo</label><input class="form-input" id="curso-ciclo" placeholder="Ej: I, II, III"></div>
+        <div class="form-group"><label class="form-label">Código Docente</label><input class="form-input" id="curso-docente" placeholder="ID docente (opcional)" type="number"></div>
       </div>
     </div>
     <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-curso')">Cancelar</button><button class="btn btn-primary" onclick="saveCurso()">Guardar</button></div>
@@ -638,13 +639,20 @@ tbody tr:hover { background: var(--surface2); }
 <!-- Matricula -->
 <div class="modal-overlay" id="modal-matricula">
   <div class="modal">
-    <div class="modal-header"><span class="modal-title">Nueva Matrícula</span><button class="modal-close" onclick="closeModal('modal-matricula')">×</button></div>
-    <div class="modal-body">
+    <div class="modal-header"><span class="modal-title" id="modal-matricula-title">Nueva Matrícula</span><button class="modal-close" onclick="closeModal('modal-matricula')">×</button></div>
+    <div class="modal-body"><input type="hidden" id="matricula-id">
       <p style="font-size:10px;color:var(--text-dim);margin-bottom:14px">El alumno y el curso deben existir previamente.</p>
       <div class="form-grid">
         <div class="form-group full"><label class="form-label">Código de Alumno</label><input class="form-input" id="matricula-alumno" placeholder="ID del alumno" type="number"></div>
         <div class="form-group full"><label class="form-label">Código de Curso</label><input class="form-input" id="matricula-curso" placeholder="ID del curso" type="number"></div>
         <div class="form-group full"><label class="form-label">Fecha de Matrícula</label><input class="form-input" id="matricula-fecha" type="date"></div>
+        <div class="form-group full">
+          <label class="form-label">Estado</label>
+          <select class="form-select" id="matricula-estado">
+            <option value="ACTIVO">ACTIVO</option>
+            <option value="INACTIVO">INACTIVO</option>
+          </select>
+        </div>
       </div>
     </div>
     <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-matricula')">Cancelar</button><button class="btn btn-primary" onclick="saveMatricula()">Guardar</button></div>
@@ -679,8 +687,8 @@ tbody tr:hover { background: var(--surface2); }
 <!-- Asistencia -->
 <div class="modal-overlay" id="modal-asistencia">
   <div class="modal">
-    <div class="modal-header"><span class="modal-title">Registrar Asistencia</span><button class="modal-close" onclick="closeModal('modal-asistencia')">×</button></div>
-    <div class="modal-body">
+    <div class="modal-header"><span class="modal-title" id="modal-asistencia-title">Registrar Asistencia</span><button class="modal-close" onclick="closeModal('modal-asistencia')">×</button></div>
+    <div class="modal-body"><input type="hidden" id="asistencia-id">
       <p style="font-size:10px;color:var(--text-dim);margin-bottom:14px">No puede haber dos asistencias en la misma fecha para la misma matrícula.</p>
       <div class="form-grid">
         <div class="form-group full"><label class="form-label">Código de Matrícula</label><input class="form-input" id="asistencia-matricula" placeholder="ID de matrícula" type="number"></div>
@@ -703,13 +711,13 @@ tbody tr:hover { background: var(--surface2); }
 <!-- Cuenta -->
 <div class="modal-overlay" id="modal-cuenta">
   <div class="modal">
-    <div class="modal-header"><span class="modal-title">Nueva Cuenta</span><button class="modal-close" onclick="closeModal('modal-cuenta')">×</button></div>
-    <div class="modal-body">
+    <div class="modal-header"><span class="modal-title" id="modal-cuenta-title">Nueva Cuenta</span><button class="modal-close" onclick="closeModal('modal-cuenta')">×</button></div>
+    <div class="modal-body"><input type="hidden" id="cuenta-id">
       <div class="form-grid">
-        <div class="form-group full"><label class="form-label">Código de Usuario</label><input class="form-input" id="cuenta-usuario" placeholder="usuario123"></div>
+        <div class="form-group full" id="cuenta-usuario-group"><label class="form-label">Código de Usuario</label><input class="form-input" id="cuenta-usuario" placeholder="usuario123"></div>
         <div class="form-group full"><label class="form-label">Correo</label><input class="form-input" id="cuenta-correo" placeholder="correo@ejemplo.com" type="email"></div>
         <div class="form-group full"><label class="form-label">Contraseña</label><input class="form-input" id="cuenta-pass" placeholder="••••••••" type="password"></div>
-        <div class="form-group full"><label class="form-label">Código de Alumno</label><input class="form-input" id="cuenta-alumno" placeholder="ID del alumno" type="number"></div>
+        <div class="form-group full" id="cuenta-alumno-group"><label class="form-label">Código de Alumno</label><input class="form-input" id="cuenta-alumno" placeholder="ID del alumno" type="number"></div>
       </div>
     </div>
     <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-cuenta')">Cancelar</button><button class="btn btn-primary" onclick="saveCuenta()">Guardar</button></div>
@@ -922,14 +930,26 @@ async function loadCursos() {
       <td class="id-cell">#${c.nroCurso}</td><td>${c.nomCurso||'—'}</td>
       <td><span class="badge badge-blue">${c.ciclo||'—'}</span></td>
       <td>${c.codDocente?`<span class="badge badge-green">Docente #${c.codDocente}</span>`:'<span class="badge badge-gray">Sin asignar</span>'}</td>
-      <td><div class="td-actions"><button class="btn btn-danger btn-sm" onclick="deleteCurso(${c.nroCurso})">Eliminar</button></div></td></tr>`).join('');
+      <td><div class="td-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editCurso(${c.nroCurso},'${esc(c.nomCurso)}','${esc(c.ciclo)}',${c.codDocente||''})">Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteCurso(${c.nroCurso})">Eliminar</button>
+      </div></td></tr>`).join('');
   } catch { errorRow(tbody,5); }
 }
 
+function resetCursoForm(){document.getElementById('curso-id').value='';document.getElementById('curso-nom').value='';document.getElementById('curso-ciclo').value='';document.getElementById('curso-docente').value='';document.getElementById('modal-curso-title').textContent='Nuevo Curso';}
+function editCurso(id,nom,ciclo,codDocente){document.getElementById('curso-id').value=id;document.getElementById('curso-nom').value=nom;document.getElementById('curso-ciclo').value=ciclo;document.getElementById('curso-docente').value=codDocente||'';document.getElementById('modal-curso-title').textContent='Editar Curso';openModal('modal-curso');}
+
 async function saveCurso(){
+  const id=document.getElementById('curso-id').value;
+  const docente=document.getElementById('curso-docente').value;
   const body={nomCurso:document.getElementById('curso-nom').value,ciclo:document.getElementById('curso-ciclo').value};
-  try{await apiFetch(`${API.cursos}/createCurso`,{method:'POST',body:JSON.stringify(body)});toast('Curso creado');closeModal('modal-curso');loadCursos();}
-  catch(e){toast('Error: '+e.message,'error');}
+  if(docente) body.codDocente=parseInt(docente);
+  try{
+    if(id){await apiFetch(`${API.cursos}/editCurso/${id}`,{method:'PUT',body:JSON.stringify(body)});toast('Curso actualizado');}
+    else{await apiFetch(`${API.cursos}/createCurso`,{method:'POST',body:JSON.stringify(body)});toast('Curso creado');}
+    closeModal('modal-curso');loadCursos();
+  }catch(e){toast('Error: '+e.message,'error');}
 }
 
 async function asignarDocente(){
@@ -957,14 +977,28 @@ async function loadMatriculas() {
       <td>Alumno #${m.codAlumno||'—'}</td><td>Curso #${m.codCurso||'—'}</td>
       <td>${m.fechaMatricula||'—'}</td>
       <td><span class="badge ${m.estado==='ACTIVO'?'badge-green':'badge-gray'}">${m.estado||'—'}</span></td>
-      <td><div class="td-actions"><button class="btn btn-danger btn-sm" onclick="deleteMatricula(${m.codMatricula})">Eliminar</button></div></td></tr>`).join('');
+      <td><div class="td-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editMatricula(${m.codMatricula},'${esc(m.fechaMatricula)}','${m.estado||'ACTIVO'}')">Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteMatricula(${m.codMatricula})">Eliminar</button>
+      </div></td></tr>`).join('');
   } catch { errorRow(tbody,6); }
 }
 
+function resetMatriculaForm(){document.getElementById('matricula-id').value='';document.getElementById('matricula-alumno').value='';document.getElementById('matricula-curso').value='';document.getElementById('matricula-fecha').value='';document.getElementById('matricula-estado').value='ACTIVO';document.getElementById('modal-matricula-title').textContent='Nueva Matrícula';document.getElementById('matricula-alumno').disabled=false;document.getElementById('matricula-curso').disabled=false;}
+function editMatricula(id,fecha,estado){document.getElementById('matricula-id').value=id;document.getElementById('matricula-fecha').value=fecha;document.getElementById('matricula-estado').value=estado;document.getElementById('modal-matricula-title').textContent='Editar Matrícula';document.getElementById('matricula-alumno').disabled=true;document.getElementById('matricula-curso').disabled=true;openModal('modal-matricula');}
+
 async function saveMatricula(){
-  const body={codAlumno:parseInt(document.getElementById('matricula-alumno').value),codCurso:parseInt(document.getElementById('matricula-curso').value),fechaMatricula:document.getElementById('matricula-fecha').value};
-  try{await apiFetch(`${API.matriculas}/crearMatricula`,{method:'POST',body:JSON.stringify(body)});toast('Matrícula creada');closeModal('modal-matricula');loadMatriculas();}
-  catch(e){toast('Error: '+e.message,'error');}
+  const id=document.getElementById('matricula-id').value;
+  try{
+    if(id){
+      const body={fechaMatricula:document.getElementById('matricula-fecha').value,estado:document.getElementById('matricula-estado').value};
+      await apiFetch(`${API.matriculas}/${id}`,{method:'PUT',body:JSON.stringify(body)});toast('Matrícula actualizada');
+    } else {
+      const body={codAlumno:parseInt(document.getElementById('matricula-alumno').value),codCurso:parseInt(document.getElementById('matricula-curso').value),fechaMatricula:document.getElementById('matricula-fecha').value,estado:document.getElementById('matricula-estado').value};
+      await apiFetch(`${API.matriculas}/crearMatricula`,{method:'POST',body:JSON.stringify(body)});toast('Matrícula creada');
+    }
+    closeModal('modal-matricula');loadMatriculas();
+  }catch(e){toast('Error: '+e.message,'error');}
 }
 
 async function deleteMatricula(id){
@@ -1016,7 +1050,7 @@ async function consultarResultado(){
       <div class="resultado-row"><span class="resultado-label">Matrícula</span><span>#${cod}</span></div>
       <div class="resultado-row"><span class="resultado-label">Fórmula</span><span>T1×30% + T2×30% + EF×40%</span></div>
       <div class="resultado-row"><span class="resultado-label">Promedio Final</span><span><strong>${r.promedio?.toFixed(2)??'—'}</strong></span></div>
-      <div class="resultado-row"><span class="resultado-label">% Asistencia</span><span>${r.asistencia?.toFixed(2)??'—'}%</span></div>
+      <div class="resultado-row"><span class="resultado-label">% Asistencia</span><span>${typeof r.asistencia==='number'?r.asistencia.toFixed(2):'—'}%</span></div>
       <div class="resultado-row"><span class="resultado-label">Estado</span><span class="badge ${aprobado?'badge-green':'badge-red'}">${r.estado||'—'}</span></div>
     </div>`;
   } catch {c.innerHTML='<p style="color:var(--error);font-size:11px;padding:12px 0">No se encontró resultado para esa matrícula</p>';}
@@ -1036,15 +1070,29 @@ async function loadAsistencias() {
         <td>${a.fecha||'—'}</td>
         <td><span class="badge ${bc}">${ic} ${a.estado||'—'}</span></td>
         <td>${a.observaciones||'—'}</td>
-        <td><div class="td-actions"><button class="btn btn-danger btn-sm" onclick="deleteAsistencia(${a.codAsistencia})">Eliminar</button></div></td></tr>`;
+        <td><div class="td-actions">
+          <button class="btn btn-ghost btn-sm" onclick="editAsistencia(${a.codAsistencia},'${esc(a.fecha)}','${a.estado}','${esc(a.observaciones)}')">Editar</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteAsistencia(${a.codAsistencia})">Eliminar</button>
+        </div></td></tr>`;
     }).join('');
   } catch { errorRow(tbody,6); }
 }
 
+function resetAsistenciaForm(){document.getElementById('asistencia-id').value='';document.getElementById('asistencia-matricula').value='';document.getElementById('asistencia-fecha').value='';document.getElementById('asistencia-estado').value='PRESENTE';document.getElementById('asistencia-obs').value='';document.getElementById('modal-asistencia-title').textContent='Registrar Asistencia';document.getElementById('asistencia-matricula').disabled=false;}
+function editAsistencia(id,fecha,estado,obs){document.getElementById('asistencia-id').value=id;document.getElementById('asistencia-fecha').value=fecha;document.getElementById('asistencia-estado').value=estado;document.getElementById('asistencia-obs').value=obs;document.getElementById('modal-asistencia-title').textContent='Editar Asistencia';document.getElementById('asistencia-matricula').disabled=true;openModal('modal-asistencia');}
+
 async function saveAsistencia(){
-  const body={codMatricula:parseInt(document.getElementById('asistencia-matricula').value),fecha:document.getElementById('asistencia-fecha').value,estado:document.getElementById('asistencia-estado').value,observaciones:document.getElementById('asistencia-obs').value};
-  try{await apiFetch(`${API.asistencias}/registrar`,{method:'POST',body:JSON.stringify(body)});toast('Asistencia registrada');closeModal('modal-asistencia');loadAsistencias();}
-  catch(e){toast('Error: '+e.message,'error');}
+  const id=document.getElementById('asistencia-id').value;
+  try{
+    if(id){
+      const body={fecha:document.getElementById('asistencia-fecha').value,estado:document.getElementById('asistencia-estado').value,observaciones:document.getElementById('asistencia-obs').value};
+      await apiFetch(`${API.asistencias}/${id}`,{method:'PUT',body:JSON.stringify(body)});toast('Asistencia actualizada');
+    } else {
+      const body={codMatricula:parseInt(document.getElementById('asistencia-matricula').value),fecha:document.getElementById('asistencia-fecha').value,estado:document.getElementById('asistencia-estado').value,observaciones:document.getElementById('asistencia-obs').value};
+      await apiFetch(`${API.asistencias}/registrar`,{method:'POST',body:JSON.stringify(body)});toast('Asistencia registrada');
+    }
+    closeModal('modal-asistencia');loadAsistencias();
+  }catch(e){toast('Error: '+e.message,'error');}
 }
 
 async function deleteAsistencia(id){
@@ -1071,14 +1119,28 @@ async function loadCuentas() {
     tbody.innerHTML=data.map(c=>`<tr>
       <td><span class="badge badge-blue">${c.codUsuario}</span></td>
       <td>${c.correo||'—'}</td><td>Alumno #${c.codAlumno||'—'}</td>
-      <td><div class="td-actions"><button class="btn btn-danger btn-sm" onclick="deleteCuenta(${c.codAlumno})">Eliminar</button></div></td></tr>`).join('');
+      <td><div class="td-actions">
+        <button class="btn btn-ghost btn-sm" onclick="editCuenta('${esc(c.codUsuario)}','${esc(c.correo)}')">Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteCuenta(${c.codAlumno})">Eliminar</button>
+      </div></td></tr>`).join('');
   } catch { errorRow(tbody,4); }
 }
 
+function resetCuentaForm(){document.getElementById('cuenta-id').value='';document.getElementById('cuenta-usuario').value='';document.getElementById('cuenta-correo').value='';document.getElementById('cuenta-pass').value='';document.getElementById('cuenta-alumno').value='';document.getElementById('modal-cuenta-title').textContent='Nueva Cuenta';document.getElementById('cuenta-usuario-group').style.display='';document.getElementById('cuenta-alumno-group').style.display='';}
+function editCuenta(codUsuario,correo){document.getElementById('cuenta-id').value=codUsuario;document.getElementById('cuenta-usuario').value=codUsuario;document.getElementById('cuenta-correo').value=correo;document.getElementById('cuenta-pass').value='';document.getElementById('modal-cuenta-title').textContent='Editar Cuenta';document.getElementById('cuenta-usuario-group').style.display='none';document.getElementById('cuenta-alumno-group').style.display='none';openModal('modal-cuenta');}
+
 async function saveCuenta(){
-  const body={codUsuario:document.getElementById('cuenta-usuario').value,correo:document.getElementById('cuenta-correo').value,contrasena:document.getElementById('cuenta-pass').value,codAlumno:parseInt(document.getElementById('cuenta-alumno').value)};
-  try{await apiFetch(`${API.cuentas}/createCuenta`,{method:'POST',body:JSON.stringify(body)});toast('Cuenta creada');closeModal('modal-cuenta');loadCuentas();}
-  catch(e){toast('Error: '+e.message,'error');}
+  const id=document.getElementById('cuenta-id').value;
+  try{
+    if(id){
+      const body={correo:document.getElementById('cuenta-correo').value,contrasena:document.getElementById('cuenta-pass').value};
+      await apiFetch(`${API.cuentas}/editCuenta/${id}`,{method:'PUT',body:JSON.stringify(body)});toast('Cuenta actualizada');
+    } else {
+      const body={codUsuario:document.getElementById('cuenta-usuario').value,correo:document.getElementById('cuenta-correo').value,contrasena:document.getElementById('cuenta-pass').value,codAlumno:parseInt(document.getElementById('cuenta-alumno').value)};
+      await apiFetch(`${API.cuentas}/createCuenta`,{method:'POST',body:JSON.stringify(body)});toast('Cuenta creada');
+    }
+    closeModal('modal-cuenta');loadCuentas();
+  }catch(e){toast('Error: '+e.message,'error');}
 }
 
 async function deleteCuenta(codAlumno){

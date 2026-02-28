@@ -10,7 +10,6 @@ import cibertec.pe.service.MatriculaImplement;
 import jakarta.xml.ws.Endpoint;
 
 @SpringBootApplication
-@EnableDiscoveryClient
 @EnableFeignClients
 public class MatriculaServiceApplication {
 	public static void main(String[] args) {

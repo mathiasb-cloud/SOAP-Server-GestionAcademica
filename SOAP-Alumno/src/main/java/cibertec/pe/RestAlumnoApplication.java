@@ -10,7 +10,6 @@ import cibertec.pe.service.AlumnoImplement;
 import jakarta.xml.ws.Endpoint;
 
 @SpringBootApplication
-@EnableDiscoveryClient
 @EnableFeignClients
 public class RestAlumnoApplication {
 
