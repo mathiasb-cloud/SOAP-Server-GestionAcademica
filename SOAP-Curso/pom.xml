@@ -9,9 +9,9 @@
 		<relativePath/>
 	</parent>
 	<groupId>cibertec.pe</groupId>
-	<artifactId>SOAP-Cuenta</artifactId>
+	<artifactId>SOAP-Curso</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>SOAP-Cuenta</name>
+	<name>SOAP-Curso</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
