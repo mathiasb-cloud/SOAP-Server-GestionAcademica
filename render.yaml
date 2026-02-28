@@ -2,8 +2,8 @@ services:
   - name: soap-alumno
     type: web
     runtime: docker
-    buildCommand: cd SOAP-Alumno && mvn clean package -DskipTests
-    startCommand: java -jar SOAP-Alumno/target/*.jar
+    dockerfilePath: ./SOAP-Alumno/Dockerfile
+    dockerContext: ./SOAP-Alumno
     envVars:
       - key: SPRING_DATASOURCE_URL
         value: jdbc:mysql://academico.cz4y4e0k6dqi.us-east-2.rds.amazonaws.com:3306/soap_proyecto?useSSL=false&serverTimezone=UTC
@@ -11,14 +11,12 @@ services:
         value: admin
       - key: SPRING_DATASOURCE_PASSWORD
         value: dbacademico
-      - key: SERVER_PORT
-        value: 10000
 
   - name: soap-asistencia
     type: web
     runtime: docker
-    buildCommand: cd SOAP-Asistencia && mvn clean package -DskipTests
-    startCommand: java -jar SOAP-Asistencia/target/*.jar
+    dockerfilePath: ./SOAP-Asistencia/Dockerfile
+    dockerContext: ./SOAP-Asistencia
     envVars:
       - key: SPRING_DATASOURCE_URL
         value: jdbc:mysql://academico.cz4y4e0k6dqi.us-east-2.rds.amazonaws.com:3306/soap_proyecto?useSSL=false&serverTimezone=UTC
@@ -26,14 +24,12 @@ services:
         value: admin
       - key: SPRING_DATASOURCE_PASSWORD
         value: dbacademico
-      - key: SERVER_PORT
-        value: 10000
 
   - name: soap-curso
     type: web
     runtime: docker
-    buildCommand: cd SOAP-Curso && mvn clean package -DskipTests
-    startCommand: java -jar SOAP-Curso/target/*.jar
+    dockerfilePath: ./SOAP-Curso/Dockerfile
+    dockerContext: ./SOAP-Curso
     envVars:
       - key: SPRING_DATASOURCE_URL
         value: jdbc:mysql://academico.cz4y4e0k6dqi.us-east-2.rds.amazonaws.com:3306/soap_proyecto?useSSL=false&serverTimezone=UTC
@@ -41,14 +37,12 @@ services:
         value: admin
       - key: SPRING_DATASOURCE_PASSWORD
         value: dbacademico
-      - key: SERVER_PORT
-        value: 10000
 
   - name: soap-docente
     type: web
     runtime: docker
-    buildCommand: cd SOAP-Docente && mvn clean package -DskipTests
-    startCommand: java -jar SOAP-Docente/target/*.jar
+    dockerfilePath: ./SOAP-Docente/Dockerfile
+    dockerContext: ./SOAP-Docente
     envVars:
       - key: SPRING_DATASOURCE_URL
         value: jdbc:mysql://academico.cz4y4e0k6dqi.us-east-2.rds.amazonaws.com:3306/soap_proyecto?useSSL=false&serverTimezone=UTC
@@ -56,14 +50,12 @@ services:
         value: admin
       - key: SPRING_DATASOURCE_PASSWORD
         value: dbacademico
-      - key: SERVER_PORT
-        value: 10000
 
   - name: soap-matricula
     type: web
     runtime: docker
-    buildCommand: cd SOAP-Matricula && mvn clean package -DskipTests
-    startCommand: java -jar SOAP-Matricula/target/*.jar
+    dockerfilePath: ./SOAP-Matricula/Dockerfile
+    dockerContext: ./SOAP-Matricula
     envVars:
       - key: SPRING_DATASOURCE_URL
         value: jdbc:mysql://academico.cz4y4e0k6dqi.us-east-2.rds.amazonaws.com:3306/soap_proyecto?useSSL=false&serverTimezone=UTC
@@ -71,14 +63,12 @@ services:
         value: admin
       - key: SPRING_DATASOURCE_PASSWORD
         value: dbacademico
-      - key: SERVER_PORT
-        value: 10000
 
   - name: soap-nota
     type: web
     runtime: docker
-    buildCommand: cd SOAP-Nota && mvn clean package -DskipTests
-    startCommand: java -jar SOAP-Nota/target/*.jar
+    dockerfilePath: ./SOAP-Nota/Dockerfile
+    dockerContext: ./SOAP-Nota
     envVars:
       - key: SPRING_DATASOURCE_URL
         value: jdbc:mysql://academico.cz4y4e0k6dqi.us-east-2.rds.amazonaws.com:3306/soap_proyecto?useSSL=false&serverTimezone=UTC
@@ -86,14 +76,12 @@ services:
         value: admin
       - key: SPRING_DATASOURCE_PASSWORD
         value: dbacademico
-      - key: SERVER_PORT
-        value: 10000
 
   - name: soap-cuenta
     type: web
     runtime: docker
-    buildCommand: cd SOAP-Cuenta && mvn clean package -DskipTests
-    startCommand: java -jar SOAP-Cuenta/target/*.jar
+    dockerfilePath: ./SOAP-Cuenta/Dockerfile
+    dockerContext: ./SOAP-Cuenta
     envVars:
       - key: SPRING_DATASOURCE_URL
         value: jdbc:mysql://academico.cz4y4e0k6dqi.us-east-2.rds.amazonaws.com:3306/soap_proyecto?useSSL=false&serverTimezone=UTC
@@ -101,14 +89,12 @@ services:
         value: admin
       - key: SPRING_DATASOURCE_PASSWORD
         value: dbacademico
-      - key: SERVER_PORT
-        value: 10000
 
   - name: frontend-academico
     type: web
     runtime: docker
-    buildCommand: cd Frontend-Academico && mvn clean package -DskipTests
-    startCommand: java -jar Frontend-Academico/target/*.jar
+    dockerfilePath: ./Frontend-Academico/Dockerfile
+    dockerContext: ./Frontend-Academico
     envVars:
       - key: SPRING_DATASOURCE_URL
         value: jdbc:mysql://academico.cz4y4e0k6dqi.us-east-2.rds.amazonaws.com:3306/soap_proyecto?useSSL=false&serverTimezone=UTC
@@ -116,5 +102,3 @@ services:
         value: admin
       - key: SPRING_DATASOURCE_PASSWORD
         value: dbacademico
-      - key: SERVER_PORT
-        value: 10000
